@@ -21,15 +21,27 @@ while menu_choice == None:
             print("Witaj, w generatorze komeny do spawnów składów")
             distance = "1"
             #tu będzie pętla while sprawdzająca prawdziwość argumentów
+            
             post = input("Podaj Posterunek na którym się znajdujesz (np.Ps,Tw): ") #Podajemy posterunek na którym się znajdujemy, ponieważ wymagane jest podanie również tego przy zdefiniowaniu konkretnego semafora
+            
             sem = input("Podaj Posterunek na którym się znajdujesz (np.G2,A): ")
+            
             distance = input("Podaj dystans od semafora. Standardowa wartość to '1': ")
+            
             amount = input("Podaj ilość wagonów(min. 1): ")
+            
             wagoons = input("Jaki model konstrukcyjny chcesz spawnować: ")
            
             print("Wygenerowana komenda:")
-            print("\t/sp "+post.title()+"_"+sem.title()+":"+distance,"n:"+amount+","+wagoons)
+            print("\t/sp " +post.title()+ "_" +sem.title()+ ":" +distance, "n:" +amount+ "," +wagoons)
+        elif menu_choice == "2":
+            player_name = input("Podaj nazwę lub nr. gracza: ")
+            reason = input("Powód: ")
+            print("Wygenerowana komenda:")
+            print("/kick_player",player_name,reason)
+        elif menu_choice == "3":break
         else:print("Wkrótce!\n");menu_choice = None;continue
+    else:print("Nie podano opcji!");menu_choice = None;continue
 
            
 
