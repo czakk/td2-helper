@@ -2,3 +2,4 @@
 *.pyproj
 *.sln
 .vscode/
+dirtycode.py
