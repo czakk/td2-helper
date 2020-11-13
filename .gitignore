@@ -3,3 +3,4 @@
 *.sln
 .vscode/
 dirtycode.py
+*.txt
