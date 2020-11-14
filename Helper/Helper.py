@@ -1,20 +1,20 @@
 # github.com/czakk; author: czak; date:05/11/2020
 #Title: TD2 Helper;
 #Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.4;Last-Update: 13/11/2020;
-def file_exist(file):
+def file_exist(file_path):
     """Sprawdza czy podany plik istnieje!"""
     try:
-        x = open(file)
+        x = open(file_path)
     except IOError:
-        verify = "brak połączenia z plikiem "+file
+        verify = "brak połączenia z plikiem "+file_path
         return verify
     else:
-        verify = "zainicjowano plik "+file
+        verify = "zainicjowano plik "+file_path
         x.close()
         return verify
 
-def display_veh(file):
-    dir = open(file,"r")
+def display_veh(file_path):
+    dir = open(file_path,"r")
     vehicles = dir.readlines()
     vehicles.pop(vehicles.index("Wagony\n"))
     for vehicle in vehicles:
@@ -73,8 +73,7 @@ def get_params(question,req):
 def sq_generator(choice,parms):
     """Generuje komendy do spwanowania składu, zwraca: """
     parms[0] = get_params("Podaj posterunek na którym się znajdujesz. Niektóre scenerie tego nie wymagają! (Cis): ",0)
-    if len(parms[0]) != 0:
-        parms[0] += "_"
+    if len(parms[0]) != 0:parms[0] += "_"
     else:parms[0] = ""
     parms[1] = get_params("Podaj semafor pod którym ma pojawić się skład!: ",1)
     parms[2] = get_params("Podaj odległośc od semafora: ",1)
@@ -108,35 +107,43 @@ def main():
         parms = kick_generator(choice,parms)
     cmd_generator(parms,choice)
 
-dir = open("squad.txt","r")
-list = dir.readlines()
-title = []
-title.append(list.pop(list.index("Wagony\n")))
-title.append(list.pop(list.index("Lokomotywy\n")))
-title.append(list.pop(list.index("Obiekty gracza\n")))
-wagons = []
-loco = []
-player = []
-for i in range(list.index("end\n")):
-    wagons.append(list[i])
-del list[0:list.index("end\n")+1]
+def test(file_path):
+    """Wczytuje liste pojazdów i przypisuje je do listy veh"""
+    file = open(file_path,"r")
+    vehicles = file.readlines()
+    title = []
+    def test2(list1,list2,name):
+       try: 
+           list1.append(list2.pop(list2.index(name+"\n")))
+       except ValueError:
+           print("nazwa",name,"nie istnieje")
+    test2(title,vehicles,"Wagony")
+    test2(title,vehicles,"Lokomotywy")
+    test2(title,vehicles,"Obiekty gracza")
+    veh = []
+    for i in range (len(title)):
+        veh.append([])
+    for i in range(len(title)):
+        for j in range(vehicles.index("end\n")):
+            veh[i].append(vehicles[j].replace("\n",""))
+        del vehicles[0:vehicles.index("end\n")+1]
+    file.close()
+    return veh,title
 
-for i in range(list.index("end\n")):
-    loco.append(list[i])
-del list[0:list.index("end\n")+1]
+vehicles,titles = test("squad.txt")
+for i in range(len(titles)):
+    print("\n"+titles[i])
+    for j in range(len(vehicles[i])):
+        print(str(i)+"."+str(j),vehicles[i][j])
+while True:
+    x = get_params("Podaj pojazd który ciebie interesuje: ",1)
+    try:
+        print(vehicles[int(x[0])][int(x[1])])
+        break
+    except IndexError:
+        print("Wybrana opcja nie istnieje")
+    except ValueError:
+        print("Wartość musi być liczbą")
 
-for i in range(list.index("end\n")):
-    player.append(list[i])
-del list[0:list.index("end\n")+1]
-
-print("\n"+title[0])
-for i in range(len(wagons)):
-    print(str(i)+".",wagons[i], end="")
-print("\n"+title[1])
-for i in range(len(loco)):
-    print(str(i)+".",loco[i], end="")
-print("\n"+title[2])
-for i in range(len(player)):
-    print(str(i)+".",player[i], end="")
-
-
+#implementacja test1() do kodu głównego
+#zrobienie coś z tytułami w funkcji test(1)
