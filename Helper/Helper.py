@@ -13,29 +13,47 @@ def file_exist(file_path):
         x.close()
         return verify
 
-def display_veh(file_path):
-    dir = open(file_path,"r")
-    vehicles = dir.readlines()
-    vehicles.pop(vehicles.index("Wagony\n"))
-    for vehicle in vehicles:
-         print(str(index)+".",vehicle,end="")
-         index += 1
-    return vehicles
+def load_vehicle(file_path):
+    """Wczytuje liste pojazdów i przypisuje je do listy veh"""
+    file = open(file_path,"r")
+    vehicles = file.readlines()
+    title = []
+    def test2(list1,list2,name):
+       """Usuwa title z pliku squad.txt"""
+       try: 
+           list1.append(list2.pop(list2.index(name+"\n")))
+       except ValueError:
+           print("nazwa",name,"nie istnieje")
+    test2(title,vehicles,"Wagony")
+    test2(title,vehicles,"Lokomotywy")
+    test2(title,vehicles,"EZT")
+    veh = []
+    for i in range (len(title)):
+        veh.append([])
+    for i in range(len(title)):
+        for j in range(vehicles.index("end\n")):
+            veh[i].append(vehicles[j].replace("\n",""))
+        del vehicles[0:vehicles.index("end\n")+1]
+    file.close()
+    return veh,title
 
-def choice_veh(variable):
-        vehicle = display_veh("squad.txt")
-        while variable == "lista":
-            index = int(get_params("\nPodaj konstrukcje z listy: ",1))
-            if index < 0:
-                print("Indeks nie może być mniejszy od 0!")
-            else:
-                try:
-                    variable = vehicle[index]
-                except ValueError:
-                    print("Podana wartość nie jest liczbą!")
-                except IndexError:
-                    print("Nie mamy tego na liście")
-        return variable
+def choice_vehicle():
+    """Wyświetla i zwraca pojazd z pliku squad.txt"""
+    vehicles,titles = load_vehicle("squad.txt")
+    for i in range(len(titles)):
+        print("\n"+titles[i])
+        for j in range(len(vehicles[i])):
+            print(str(i)+"."+str(j),vehicles[i][j])
+    while True:
+        x = get_params("Podaj pojazd który ciebie interesuje: ",1)
+        try:
+            return(vehicles[int(x[0])][int(x[1])])
+            break
+        except IndexError:
+            print("Wybrana opcja nie istnieje")
+        except ValueError:
+            print("Wartość musi być liczbą")
+
 def display_hello():
     """Wyświetlanie wiadomości powitalnej"""
     print("""Witam w Generatorze Komend w symulatorze Train Driver 2\t
@@ -43,6 +61,7 @@ def display_hello():
                 Dziękuje za testowanie aplikacji\n""")
     print("Inicjacja pliku tekstowego:",file_exist("squad.txt"))
     print("Inicjacja pliku tekstowego:",file_exist("post.txt"),"\n")
+
 def menu():
     """Menu wyboru między opcjami programu, zwraca nr. opcji"""
     legal_choices = ("1","2","3")
@@ -80,13 +99,13 @@ def sq_generator(choice,parms):
     parms[3] = get_params("Podaj ilość wagonów: ",1)
     parms[4] = get_params("Jaki typ pojazdu chcesz stworzyć? Jeżeli chcesz otworzyć listę pojazdów wpisz 'lista': ",1)
     if parms[4] == "lista":
-       parms[4] = choice_veh(parms[4])
+       parms[4] = choice_vehicle()
     return parms
 
 def kick_generator(choice,parms):
     """Generuje komende która wyrzuca gracza"""
     parms[0] = get_params("Podaj nick lub indetyfikator gracza: ",1)
-    parms[1] = get_params("Podaj powód (niewymagane)",0)
+    parms[1] = get_params("Podaj powód (niewymagane): ",0)
     return parms
 def cmd_generator(parms,choice):
     """Generuje komendy"""
@@ -104,46 +123,9 @@ def main():
     if choice == "1":
       parms = sq_generator(choice,parms)
     elif choice == "2":
-        parms = kick_generator(choice,parms)
+       parms = kick_generator(choice,parms)
     cmd_generator(parms,choice)
 
-def test(file_path):
-    """Wczytuje liste pojazdów i przypisuje je do listy veh"""
-    file = open(file_path,"r")
-    vehicles = file.readlines()
-    title = []
-    def test2(list1,list2,name):
-       try: 
-           list1.append(list2.pop(list2.index(name+"\n")))
-       except ValueError:
-           print("nazwa",name,"nie istnieje")
-    test2(title,vehicles,"Wagony")
-    test2(title,vehicles,"Lokomotywy")
-    test2(title,vehicles,"Obiekty gracza")
-    veh = []
-    for i in range (len(title)):
-        veh.append([])
-    for i in range(len(title)):
-        for j in range(vehicles.index("end\n")):
-            veh[i].append(vehicles[j].replace("\n",""))
-        del vehicles[0:vehicles.index("end\n")+1]
-    file.close()
-    return veh,title
+main()
 
-vehicles,titles = test("squad.txt")
-for i in range(len(titles)):
-    print("\n"+titles[i])
-    for j in range(len(vehicles[i])):
-        print(str(i)+"."+str(j),vehicles[i][j])
-while True:
-    x = get_params("Podaj pojazd który ciebie interesuje: ",1)
-    try:
-        print(vehicles[int(x[0])][int(x[1])])
-        break
-    except IndexError:
-        print("Wybrana opcja nie istnieje")
-    except ValueError:
-        print("Wartość musi być liczbą")
-
-#implementacja test1() do kodu głównego
 #zrobienie coś z tytułami w funkcji test(1)
