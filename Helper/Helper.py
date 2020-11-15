@@ -1,6 +1,6 @@
-# github.com/czakk; author: czak; date:05/11/2020
-#Title: TD2 Helper;
-#Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.4;Last-Update: 13/11/2020;
+#   github.com/czakk/td2-helper; author: czak; date:05/11/2020
+#   Title: TD2 Helper;
+#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.4;Last-Update: 15/11/2020 by czak;
 def file_exist(file_path):
     """Sprawdza czy podany plik istnieje!"""
     try:
@@ -37,6 +37,33 @@ def load_vehicle(file_path):
     file.close()
     return veh,title
 
+def load_post(file_path):
+    """Funkcja załadowuje posterunki z pliku podanego w argumencie, tworzy kopie listy posterunków i w tej kopii tworzy posterunki bez cały nazw np. Ps zamiast Ps - Piaskowo"""
+    file = open(file_path, "r")
+    post_todisplay = file.readlines()
+    for i in range(len(post_todisplay)):
+            post_todisplay.insert(i,post_todisplay[i].replace("\n",""))
+            post_todisplay.pop(i+1)
+    post_tochoice = post_todisplay[:]
+    for i in range(len(post_tochoice)):
+        post_tochoice.insert(i,post_tochoice[i][:post_tochoice[i].index("-")-1])
+        post_tochoice.pop(i+1)
+    return post_todisplay,post_tochoice
+
+def choice_post():
+    display,choice = load_post("post.txt")
+    for i in range(len(display)):
+        print(str(i)+".",display[i])
+    while True:
+        x = get_params("Który posterunek wybierasz?: ",1)
+        try:
+            return(choice[int(x)])
+            break
+        except IndexError:
+            print("Wybrana opcja nie istnieje")
+        except ValueError:
+            print("Wartośc musi być liczbą")
+
 def choice_vehicle():
     """Wyświetla i zwraca pojazd z pliku squad.txt"""
     vehicles,titles = load_vehicle("squad.txt")
@@ -47,12 +74,12 @@ def choice_vehicle():
     while True:
         x = get_params("Podaj pojazd który ciebie interesuje: ",1)
         try:
-            return(vehicles[int(x[0])][int(x[1])])
+            return(vehicles[int(x[:x.index(".")])][int(x[x.index(".")+1:])])
             break
         except IndexError:
             print("Wybrana opcja nie istnieje")
         except ValueError:
-            print("Wartość musi być liczbą")
+            print("Wartośc nie jest liczbą lub zabrakło '.' pomiędzy liczbami.")
 
 def display_hello():
     """Wyświetlanie wiadomości powitalnej"""
@@ -87,11 +114,14 @@ def get_params(question,req):
         variable = ""
         while len(variable) == 0:
             variable = input(question)
+
     return variable
 
 def sq_generator(choice,parms):
     """Generuje komendy do spwanowania składu, zwraca: """
-    parms[0] = get_params("Podaj posterunek na którym się znajdujesz. Niektóre scenerie tego nie wymagają! (Cis): ",0)
+    parms[0] = get_params("Podaj posterunek na którym się znajdujesz. Niektóre scenerie tego nie wymagają! (Cis). By otworzyc listę posterunków wpisz 'lista': ",0)
+    if parms[0] == "lista":
+        parms[0] = choice_post()
     if len(parms[0]) != 0:parms[0] += "_"
     else:parms[0] = ""
     parms[1] = get_params("Podaj semafor pod którym ma pojawić się skład!: ",1)
@@ -128,4 +158,5 @@ def main():
 
 main()
 
+#input("\nNaciśnij enter aby zakończyć!\n")
 #zrobienie coś z tytułami w funkcji test(1)

@@ -1,7 +1,28 @@
-5
-sklad
-eaos
-zemos
-111a
-en57
-eu07
+Wagony
+Grafitti
+Bwxz
+Bcwxz
+Bcdu
+Bdnu
+Bnouz
+Brdu
+B10ou
+B9nopuvz
+B9ouv
+A9ou
+A9ouy
+B10
+Bbnopuvz
+Eaos
+end
+Lokomotywy
+EU-07
+EU08
+Eu08
+Sm42
+end
+Obiekty gracza
+jaajca
+elo benc
+end
+[KONIEC PLIKU - do not delete]
