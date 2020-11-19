@@ -36,14 +36,16 @@ class File_test(object):
             choice_list = display_list[:]
             
             for i in range(len(choice_list)):
-                choice_list.insert(i,choice_list[i][:choice_list[i].index("-")-1])
-                choice_list.pop(i+1)
+                try:
+                    choice_list.insert(i,choice_list[i][:choice_list[i].index(">")-1])
+                    choice_list.pop(i+1)
+                except:continue
             return display_list,choice_list
 
 def load_vehicle(file_path):
     """Wczytuje liste pojazdów i przypisuje je do listy veh"""
     file = File_test("squad.txt")
-    vehicles = file.list_display
+    vehicle_d,vehicle_c = file.list_display()
     title = []
     def titles(list1,list2):
        """Usuwa title z pliku squad.txt"""
@@ -51,15 +53,15 @@ def load_vehicle(file_path):
           if i[0] == "<":
               list2.append(i[1:])
               list1.pop(list1.index(i))
-    titles(vehicles,title)
+    titles(vehicle_c,title)
     veh = []
     for i in range (len(title)):
         veh.append([])
     for i in range(len(title)):
-        for j in range(vehicles.index("end\n")):
-            veh[i].append(vehicles[j].replace("\n",""))
-        del vehicles[0:vehicles.index("end\n")+1]
-    file.close()
+        for j in range(vehicle_c.index("end")):
+            veh[i].append(vehicle_c[j].replace("\n",""))
+        del vehicle_c[0:vehicle_c.index("end")+1]
+    file.file.close()
     return veh,title
 
 #def load_post(file_path):
