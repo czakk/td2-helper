@@ -1,6 +1,6 @@
 #   github.com/czakk/td2-helper; author: czak; date:05/11/2020
 #   Title: TD2 Helper;
-#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.5;Last-Update: 19/11/2020 by czak;
+#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.5;Last-Update: 28/12/2020 by czak;
 
 class File_test(object):
     """Testuje pliki czy posiadają poprawne parametry"""
@@ -12,52 +12,49 @@ class File_test(object):
             self.file = open(file,"r")
         except IOError as e:
             self.__error = e
+    
     def file_exist(self):
         if self.__error:
             print("Plik", self.file_name, "nie może zostać zainicjowany. Kod błędu",self.__error,"\n")
-            self.file = 0
+            return False
         else:
             print("Plik", self.file_name,"został zainicjowany \n")
    
-    def list_display(self):
-        """Usuwa wszystko po znaku '-' we wczytanym pliku"""
-        if self.file == 0:
-            print("Wystąpił problem z plikiem",self.file,"kod błędu",self.error)
-        else:
-            display_list = self.file.readlines()
-            
-            for i in range(len(display_list)):
-                display_list.insert(i,display_list[i].replace("\n",""))
-                display_list.pop(i+1)
-            
-            choice_list = display_list[:]
-            
-            for i in range(len(choice_list)):
-                try:
-                    choice_list.insert(i,choice_list[i][:choice_list[i].index(">")-1])
-                    choice_list.pop(i+1)
-                except:continue
-            return display_list,choice_list
+    def display_list(self):
+        """Praca z plikiem"""
+        #wczytanie elementów, dodanie ich do odpowiednich list, usunięcie znacznika '\n' oraz '<
+        elements = []
+        objects = []
+        #lista objects która będziemy wyswietlac z opisami
+        display_objects = []
+        for i in self.file.readlines():
+            if i[0] == "<":
+               objects.append([i[1:].replace("\n","")])
+               continue
+            elements.append(i.replace("\n",""))
+        
+        for i in range(len(objects)):
+            for j in elements:
+                if j == "end":
+                    display_objects.append(elements[:elements.index(j)])
+                    del elements[:elements.index(j)+1]
+                    break
+                else:
+                    if ">" in j:
+                        j = j[:j.index(">")-1]
+                    objects[i].append(j)
+        return objects,display_objects
     
-    def load_vehicle(self):
-        vehicle_d,vehicle_c = list_display()
-        title = []
-        def titles(list1,list2):
-           """Usuwa title z pliku squad.txt"""
-           for i in list1:
-              if i[0] == "<":
-                  list2.append(i[1:])
-                  list1.pop(list1.index(i))
-        titles(vehicle_c,title)
-        veh = []
-        for i in range (len(title)):
-            veh.append([])
-        for i in range(len(title)):
-            for j in range(vehicle_c.index("end")):
-                veh[i].append(vehicle_c[j].replace("\n",""))
-            del vehicle_c[0:vehicle_c.index("end")+1]
-        file.file.close()
-        return veh,title
+    def pick_object(self):
+        pick,display = self.display_list()
+        titles = []
+        for i in range(len(pick)):
+            titles.append(pick[i].pop(0))
+            del display[i][0]
+        
+        print(pick)
+        print(display)
+        print(titles)
 
 def load_vehicle(file_path):
     """Wczytuje liste pojazdów i przypisuje je do listy veh"""
@@ -101,7 +98,7 @@ def choice_vehicle():
     file = File_test("squad.txt")
     vehicle,titles = load_vehicle("squad.txt")
     vehicles,vehicle_c = file.list_display()
-    for i in range(len(titles)):
+    for i in range(len()):
         print("\n"+titles[i])
         for j in range(len(vehicles[i])):
             print(str(i)+"."+str(j),vehicles[i][j])
@@ -117,13 +114,12 @@ def choice_vehicle():
 
 def display_hello():
     """Wyświetlanie wiadomości powitalnej"""
-    f1 = File_test("squad.txt")
-    f2 = File_test("posts.txt")
+    File_test("squad.txt").file_exist()
+    File_test("posts.txt").file_exist()
     print("""Witam w Generatorze Komend w symulatorze Train Driver 2\t
             Jest to wersja wczesna, błędy można zgłaszać na forum,github,dc:czak#4333\t\t
                 Dziękuje za testowanie aplikacji\n""")
-    f1.file_exist()
-    f2.file_exist()
+
 
 def menu():
     """Menu wyboru między opcjami programu, zwraca nr. opcji"""
@@ -162,9 +158,15 @@ def sq_generator(parms):
     parms[1] = get_params("Podaj semafor pod którym ma pojawić się skład!: ",1)
     parms[2] = get_params("Podaj odległośc od semafora: ",1)
     parms[3] = get_params("Podaj ilość wagonów: ",1)
-    parms[4] = get_params("Jaki typ pojazdu chcesz stworzyć? Jeżeli chcesz otworzyć listę pojazdów wpisz 'lista': ",1)
-    if parms[4] == "lista":
-        parms[4] = choice_vehicle()
+    while True:
+        parms[4] = get_params("Jaki typ pojazdu chcesz stworzyć? Jeżeli chcesz otworzyć listę pojazdów wpisz 'lista': ",1)
+        if parms[4] == "lista":
+            if file1.file_exist == False:
+                print("Operacja nieudana")
+            else:
+                file1.display_list()
+        else:
+            break
 
     while True:
         choice = get_params("Czy chcesz coś dodać do obecnego składu? t/n: ",1)
@@ -197,18 +199,20 @@ def cmd_generator(parms,choice):
         print("\t/kick_driver",parms[0],parms[1])
     else:print("Wystąpił Błąd")
 
-def main():
-    """Główna funkcja programu"""
-    parms = [1,2,3,4,5,""]
-    display_hello()
-    choice = menu()
-    if choice == "1":
-      parms = sq_generator(parms)
-    elif choice == "2":
-       parms = kick_generator(parms)
-    cmd_generator(parms,choice)
+#def main():
+#    """Główna funkcja programu"""
+#    parms = [1,2,3,4,5,""]
+#    display_hello()
+#    choice = menu()
+#    if choice == "1":
+#      parms = sq_generator(parms)
+#    elif choice == "2":
+#       parms = kick_generator(parms)
+#    cmd_generator(parms,choice)
         
-main()
+#main()
+
+File_test("squad.txt").pick_object()
 
 #input("\nNaciśnij enter aby zakończyć!\n")
 #zrobienie coś z tytułami w funkcji test(1)
