@@ -50,11 +50,22 @@ class File_test(object):
         titles = []
         for i in range(len(pick)):
             titles.append(pick[i].pop(0))
-            del display[i][0]
         
-        print(pick)
-        print(display)
-        print(titles)
+        for i in range(len(titles)):
+            print("\n"+titles[i],"\n")
+            for j in display[i]:
+                index = display[i].index(j)
+                print(str(i)+"."+str(index),j)
+
+        while True:
+            choice = get_params("\nKtóry pojazd Ciebie interesuje?: ",1)
+            try:
+                return pick[int(choice[:choice.index(".")])][int(choice[choice.index(".")+1:])]
+                break
+            except IndexError:
+                print("Na wybranej pozycji nie znajduje się żaden pojazd")
+            except ValueError:
+                print("Podana wartość jest nieprawidłowa")
 
 def load_vehicle(file_path):
     """Wczytuje liste pojazdów i przypisuje je do listy veh"""
@@ -149,7 +160,10 @@ def get_params(question,req):
 
 def sq_generator(parms):
     """Generuje komendy do spwanowania składu, zwraca: """
-    file1 = File_test("squad.txt")
+    try:
+        file1 = File_test("squad.txt")
+    except: 
+        print("yolo")
     parms[0] = get_params("Podaj posterunek na którym się znajdujesz. Niektóre scenerie tego nie wymagają! (Cis). By otworzyc listę posterunków wpisz 'lista': ",0)
     if parms[0] == "lista":
         parms[0] = choice_post()
@@ -161,10 +175,11 @@ def sq_generator(parms):
     while True:
         parms[4] = get_params("Jaki typ pojazdu chcesz stworzyć? Jeżeli chcesz otworzyć listę pojazdów wpisz 'lista': ",1)
         if parms[4] == "lista":
-            if file1.file_exist == False:
+            if file1.file_exist() == False:
                 print("Operacja nieudana")
             else:
-                file1.display_list()
+               parms[4] = file1.pick_object()
+               break
         else:
             break
 
@@ -177,9 +192,16 @@ def sq_generator(parms):
                     parms[5] = get_params("Podaj ilość wagonów: ",1)
                     parms[4] += ";n:"+parms[5]+","
                 else:
-                    parms[5] = get_params("Jaki typ pojazdu chcesz stworzyć? Jeżeli chcesz otworzyć listę pojazdów wpisz 'lista': ",1)
-                    if parms[5] == "lista":
-                        parms[5] = choice_vehicle()
+                    while True:
+                        parms[5] = get_params("Jaki typ pojazdu chcesz stworzyć? Jeżeli chcesz otworzyć listę pojazdów wpisz 'lista': ",1)
+                        if parms[5] == "lista":
+                            if file1.file_exist() == False:
+                                print("Operacja nieudana")
+                            else:
+                                parms[5] = file1.pick_object()
+                                break
+                        else:
+                            break
                     parms[4] += parms[5]
         elif choice.lower() == "n":
             break
@@ -199,20 +221,20 @@ def cmd_generator(parms,choice):
         print("\t/kick_driver",parms[0],parms[1])
     else:print("Wystąpił Błąd")
 
-#def main():
-#    """Główna funkcja programu"""
-#    parms = [1,2,3,4,5,""]
-#    display_hello()
-#    choice = menu()
-#    if choice == "1":
-#      parms = sq_generator(parms)
-#    elif choice == "2":
-#       parms = kick_generator(parms)
-#    cmd_generator(parms,choice)
+def main():
+    """Główna funkcja programu"""
+    parms = [1,2,3,4,5,""]
+    display_hello()
+    choice = menu()
+    if choice == "1":
+      parms = sq_generator(parms)
+    elif choice == "2":
+       parms = kick_generator(parms)
+    cmd_generator(parms,choice)
         
-#main()
+main()
 
-File_test("squad.txt").pick_object()
+#File_test("posts.txt").pick_object()
 
 #input("\nNaciśnij enter aby zakończyć!\n")
 #zrobienie coś z tytułami w funkcji test(1)
