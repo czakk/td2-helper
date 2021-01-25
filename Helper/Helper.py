@@ -19,7 +19,7 @@ class File_test(object):
         if self.__error:
             print("Plik", self.file_name, "nie może zostać zainicjowany. Kod błędu",self.__error,"\n")
             return False
-        
+
         if not "<" in self.file.read():
             print("W pliku",self.file_name,"brakuje tytułów ze znakiem '<'")
             return False
@@ -208,6 +208,7 @@ def sq_generator(parms):
     while True:
         choice = get_params("Czy chcesz coś dodać do obecnego składu? t/n: ",1)
         if choice.lower() == "t":
+            file3 = File_test("squad.txt")
             for i in range(2):
                 parms[5] = ""
                 if i == 0:
@@ -217,10 +218,9 @@ def sq_generator(parms):
                     while True:
                         parms[5] = get_params("Jaki typ pojazdu chcesz stworzyć? Jeżeli chcesz otworzyć listę pojazdów wpisz 'lista': ",1)
                         if parms[5] == "lista":
-                            if file1.file_exist() == False:
+                            if file3.file_exist() == False:
                                 print("Operacja nieudana")
                             else:
-                                file3 = File_test("squad.txt")
                                 parms[5] = file3.pick_object()
                                 break
                         else:
