@@ -1,6 +1,7 @@
 #   github.com/czakk/td2-helper; author: czak; date:05/11/2020
 #   Title: TD2 Helper;
-#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.5;Last-Update: 28/12/2020 by czak;
+#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.7;Last-Update: 30/12/2020 by czak;
+import sys
 
 class File_test(object):
     """Testuje pliki czy posiadają poprawne parametry"""
@@ -10,6 +11,7 @@ class File_test(object):
         self.__error = None
         try:
             self.file = open(file,"r")
+            
         except IOError as e:
             self.__error = e
     
@@ -17,8 +19,17 @@ class File_test(object):
         if self.__error:
             print("Plik", self.file_name, "nie może zostać zainicjowany. Kod błędu",self.__error,"\n")
             return False
-        else:
-            print("Plik", self.file_name,"został zainicjowany \n")
+        
+        if not "<" in self.file.read():
+            print("W pliku",self.file_name,"brakuje tytułów ze znakiem '<'")
+            return False
+        self.file.seek(0)
+        if not "end" in self.file.read():
+            print("W pliku",self.file_name,"brakuje znaczników 'end'")
+            return False
+
+        print("Plik", self.file_name,"został zainicjowany \n")   
+
    
     def display_list(self):
         """Praca z plikiem"""
@@ -27,6 +38,7 @@ class File_test(object):
         objects = []
         #lista objects która będziemy wyswietlac z opisami
         display_objects = []
+        self.file.seek(0)
         for i in self.file.readlines():
             if i[0] == "<":
                objects.append([i[1:].replace("\n","")])
@@ -44,6 +56,7 @@ class File_test(object):
                         j = j[:j.index(">")-1]
                     objects[i].append(j)
         return objects,display_objects
+        
     
     def pick_object(self):
         pick,display = self.display_list()
@@ -56,14 +69,15 @@ class File_test(object):
             for j in display[i]:
                 index = display[i].index(j)
                 print(str(i)+"."+str(index),j)
-
+               
         while True:
-            choice = get_params("\nKtóry pojazd Ciebie interesuje?: ",1)
+            choice = get_params("\nKtóry obiekt Ciebie interesuje?: ",1)
             try:
+                self.file.close()
                 return pick[int(choice[:choice.index(".")])][int(choice[choice.index(".")+1:])]
                 break
             except IndexError:
-                print("Na wybranej pozycji nie znajduje się żaden pojazd")
+                print("Na wybranej pozycji nie znajduje się obiekt")
             except ValueError:
                 print("Podana wartość jest nieprawidłowa")
 
@@ -125,11 +139,12 @@ def choice_vehicle():
 
 def display_hello():
     """Wyświetlanie wiadomości powitalnej"""
-    File_test("squad.txt").file_exist()
-    File_test("posts.txt").file_exist()
+
     print("""Witam w Generatorze Komend w symulatorze Train Driver 2\t
             Jest to wersja wczesna, błędy można zgłaszać na forum,github,dc:czak#4333\t\t
                 Dziękuje za testowanie aplikacji\n""")
+    File_test("squad.txt").file_exist()
+    File_test("posts.txt").file_exist()
 
 
 def menu():
@@ -162,11 +177,18 @@ def sq_generator(parms):
     """Generuje komendy do spwanowania składu, zwraca: """
     try:
         file1 = File_test("squad.txt")
-    except: 
-        print("yolo")
-    parms[0] = get_params("Podaj posterunek na którym się znajdujesz. Niektóre scenerie tego nie wymagają! (Cis). By otworzyc listę posterunków wpisz 'lista': ",0)
-    if parms[0] == "lista":
-        parms[0] = choice_post()
+        file2 = File_test("posts.txt")
+    except: return 0
+
+    while True:
+        parms[0] = get_params("Podaj posterunek na którym się znajdujesz. Niektóre scenerie tego nie wymagają! (Cis). By otworzyc listę posterunków wpisz 'lista': ",0)
+        if parms[0] == "lista":
+            if file2.file_exist() == False:
+                print("Operacja nieudana")
+            else:
+               parms[0] = file2.pick_object()
+               break
+        else: break
     if len(parms[0]) != 0:parms[0] += "_"
     else:parms[0] = ""
     parms[1] = get_params("Podaj semafor pod którym ma pojawić się skład!: ",1)
@@ -198,7 +220,8 @@ def sq_generator(parms):
                             if file1.file_exist() == False:
                                 print("Operacja nieudana")
                             else:
-                                parms[5] = file1.pick_object()
+                                file3 = File_test("squad.txt")
+                                parms[5] = file3.pick_object()
                                 break
                         else:
                             break
@@ -223,18 +246,23 @@ def cmd_generator(parms,choice):
 
 def main():
     """Główna funkcja programu"""
-    parms = [1,2,3,4,5,""]
     display_hello()
-    choice = menu()
-    if choice == "1":
-      parms = sq_generator(parms)
-    elif choice == "2":
-       parms = kick_generator(parms)
-    cmd_generator(parms,choice)
+    while True:
+        parms = [1,2,3,4,5,""]
+        choice = menu()
+        if choice == "1":
+          parms = sq_generator(parms)
+        elif choice == "2":
+           parms = kick_generator(parms)
+        elif choice == "3":
+            print("Do następnego")
+            sys.exit()
+        cmd_generator(parms,choice)
+        print("\n")
+
         
 main()
 
 #File_test("posts.txt").pick_object()
 
 #input("\nNaciśnij enter aby zakończyć!\n")
-#zrobienie coś z tytułami w funkcji test(1)
