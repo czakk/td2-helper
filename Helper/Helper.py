@@ -1,6 +1,6 @@
 #   github.com/czakk/td2-helper; author: czak; date:05/11/2020
 #   Title: TD2 Helper;
-#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.7;Last-Update: 30/12/2020 by czak;
+#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.9;Last-Update: 26/01/2021 by czak;
 import sys
 
 class File_test(object):
@@ -271,12 +271,15 @@ def history():
     except IOError:
         print("Brakuje pliku history.txt")
     else:
-        for i in f.readlines():
-            if len(i) < 2:
+        print("\nHistoria 5 ostatnich komend:")
+        pos = 1
+        history = f.readlines()
+        for i in range(len(history)-5,len(history)):
+            if len(history[i]) < 2:
                 continue
             else:
-                print(i[1:len(i)-1])
-
+                print(str(pos)+".",history[i].replace("'",""),end="")
+                pos += 1
 def main():
     """Główna funkcja programu"""
     display_hello()
@@ -299,5 +302,4 @@ def main():
 main()
 
 #File_test("posts.txt").pick_object()
-
 #input("\nNaciśnij enter aby zakończyć!\n")
