@@ -1,5 +1,5 @@
 # TD2 Helper
-Aplikacja stworzona dla graczy Symulatora [Train Driver 2](https://td2.info.pl/), która ma na celu ułatwić rozgrywkę poprzez Generator Komend lub Generator Rozkazów Pisemnych (wkrótce). 
+Aplikacja stworzona dla graczy Symulatora [Train Driver 2](https://td2.info.pl/), która ma na celu ułatwić rozgrywkę poprzez Generator Komend lub Rozkazów Pisemnych (wkrótce). 
 ## Co aktualnie oferuje Aplikacja?
 - Generator tworzenia pojazdów - Kiedy gracz prosi nas o stworzenie np. 5 węglarek pod semaforem C wystarczy, że użyjemy  naszego **Generatora**, podamy odpowiednie parametry a w wyniku otrzymamy komendę gotowa do wklejenia na chat gry
 - Generator /kick_driver - Komenda pozwalająca wyrzucić nieodpowiedniego gracza z nasej scenerii
