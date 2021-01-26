@@ -20,15 +20,24 @@ class File_test(object):
             print("Plik", self.file_name, "nie może zostać zainicjowany. Kod błędu",self.__error,"\n")
             return False
 
-        if not "<" in self.file.read():
-            print("W pliku",self.file_name,"brakuje tytułów ze znakiem '<'")
-            return False
-        self.file.seek(0)
-        if not "end" in self.file.read():
-            print("W pliku",self.file_name,"brakuje znaczników 'end'")
-            return False
+        #if not "<" in self.file.read():
+        #    print("W pliku",self.file_name,"brakuje tytułów ze znakiem '<'")
+        #    return False
+        
+        #if not "end" in self.file.read():
+        #    print("W pliku",self.file_name,"brakuje znaczników 'end'")
+        #    return False
+        def check_key(key):
+            self.file.seek(0)
+            if not key in self.file.read():
+                print("W pliku",self.file_name,"brakuje znacznika",key)
+                return False
 
-        print("Plik", self.file_name,"został zainicjowany \n")   
+        if check_key("<") != False and check_key("end") != False:
+            print("Plik", self.file_name,"został zainicjowany \n")
+        else:
+            return False
+          
 
    
     def display_list(self):
@@ -149,13 +158,14 @@ def display_hello():
 
 def menu():
     """Menu wyboru między opcjami programu, zwraca nr. opcji"""
-    legal_choices = ("1","2","3")
+    legal_choices = ("1","2","3","4")
     user_choice = None
     while user_choice not in legal_choices:
           print("""Wybierz opcję która cię interesuję:
                1.Generator składów
                2.Wyrzucenia Gracza
-               3.Zamknięcie programu
+               3.Historia Komend
+               4.Zamknięcie programu
               """)
           user_choice = input("Która opcje wybierasz?: ")
           if user_choice not in legal_choices:
@@ -237,12 +247,35 @@ def kick_generator(parms):
     return parms
 def cmd_generator(parms,choice):
     """Generuje komendy"""
-    print("\nWygenerowana komenda")
+    if choice in ("1","2"):
+        print("\nWygenerowana komenda")
     if choice == "1":
+        command = "/sp " +parms[0].title()+parms[1].title()+ ":" +parms[2]+ " n:" +parms[3]+ "," +parms[4]
         print("\t/sp " +parms[0].title()+parms[1].title()+ ":" +parms[2], "n:" +parms[3]+ "," +parms[4])
+        history = open("history.txt","a")
+        history.write("\n"+repr(command))
+        history.close()
     elif choice == "2":
+        command = "/kick_driver "+parms[0]+" "+parms[1]
         print("\t/kick_driver",parms[0],parms[1])
+        history = open("history.txt","a")
+        history.write("\n"+repr(command))
+        history.close()
+    elif choice == "3":
+        return 0
     else:print("Wystąpił Błąd")
+
+def history():
+    try:
+        f = open("history.txt","r")
+    except IOError:
+        print("Brakuje pliku history.txt")
+    else:
+        for i in f.readlines():
+            if len(i) < 2:
+                continue
+            else:
+                print(i[1:len(i)-1])
 
 def main():
     """Główna funkcja programu"""
@@ -255,6 +288,8 @@ def main():
         elif choice == "2":
            parms = kick_generator(parms)
         elif choice == "3":
+            history()
+        elif choice == "4":
             print("Do następnego")
             sys.exit()
         cmd_generator(parms,choice)
