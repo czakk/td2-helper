@@ -3,6 +3,7 @@
 #   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.9;Last-Update: 26/01/2021 by czak;
 import sys
 
+
 class File_test(object):
     """Testuje pliki czy posiadają poprawne parametry"""
     
@@ -90,61 +91,61 @@ class File_test(object):
             except ValueError:
                 print("Podana wartość jest nieprawidłowa")
 
-def load_vehicle(file_path):
-    """Wczytuje liste pojazdów i przypisuje je do listy veh"""
-    file = File_test("squad.txt")
-    vehicle_d,vehicle_c = file.list_display()
-    title = []
-    def titles(list1,list2):
-       """Usuwa title z pliku squad.txt"""
-       for i in list1:
-          if i[0] == "<":
-              list2.append(i[1:])
-              list1.pop(list1.index(i))
-    titles(vehicle_c,title)
-    veh = []
-    for i in range (len(title)):
-        veh.append([])
-    for i in range(len(title)):
-        for j in range(vehicle_c.index("end")):
-            veh[i].append(vehicle_c[j].replace("\n",""))
-        del vehicle_c[0:vehicle_c.index("end")+1]
-    file.file.close()
-    return veh,title
+#def load_vehicle(file_path):
+#    """Wczytuje liste pojazdów i przypisuje je do listy veh"""
+#    file = File_test("sklady_helper.txt")
+#    vehicle_d,vehicle_c = file.list_display()
+#    title = []
+#    def titles(list1,list2):
+#       """Usuwa title z pliku squad.txt"""
+#       for i in list1:
+#          if i[0] == "<":
+#              list2.append(i[1:])
+#              list1.pop(list1.index(i))
+#    titles(vehicle_c,title)
+#    veh = []
+#    for i in range (len(title)):
+#        veh.append([])
+#    for i in range(len(title)):
+#        for j in range(vehicle_c.index("end")):
+#            veh[i].append(vehicle_c[j].replace("\n",""))
+#        del vehicle_c[0:vehicle_c.index("end")+1]
+#    file.file.close()
+#    return veh,title
 
-def choice_post():
-     file = File_test("post.txt")
-     display,choice = file.list_display()
-     for i in range(len(display)):
-        print(str(i)+".",display[i])
-     while True:
-        x = get_params("Który posterunek wybierasz?: ",1)
-        try:
-            return(choice[int(x)])
-            break
-        except IndexError:
-            print("Wybrana opcja nie istnieje")
-        except ValueError:
-            print("Wartośc musi być liczbą")
+#def choice_post():
+#     file = File_test("post.txt")
+#     display,choice = file.list_display()
+#     for i in range(len(display)):
+#        print(str(i)+".",display[i])
+#     while True:
+#        x = get_params("Który posterunek wybierasz?: ",1)
+#        try:
+#            return(choice[int(x)])
+#            break
+#        except IndexError:
+#            print("Wybrana opcja nie istnieje")
+#        except ValueError:
+#            print("Wartośc musi być liczbą")
 
-def choice_vehicle():
-    """Wyświetla i zwraca pojazd z pliku squad.txt"""
-    file = File_test("squad.txt")
-    vehicle,titles = load_vehicle("squad.txt")
-    vehicles,vehicle_c = file.list_display()
-    for i in range(len()):
-        print("\n"+titles[i])
-        for j in range(len(vehicles[i])):
-            print(str(i)+"."+str(j),vehicles[i][j])
-    while True:
-        x = get_params("Podaj pojazd który ciebie interesuje: ",1)
-        try:
-            return(vehicle_c[int(x[:x.index(".")])][int(x[x.index(".")+1:])])
-            break
-        except IndexError:
-            print("Wybrana opcja nie istnieje")
-        except ValueError:
-            print("Wartośc nie jest liczbą lub zabrakło '.' pomiędzy liczbami.")
+#def choice_vehicle():
+#    """Wyświetla i zwraca pojazd z pliku squad.txt"""
+#    file = File_test("sklady_helper.txt")
+#    vehicle,titles = load_vehicle("sklady_helper.txt")
+#    vehicles,vehicle_c = file.list_display()
+#    for i in range(len()):
+#        print("\n"+titles[i])
+#        for j in range(len(vehicles[i])):
+#            print(str(i)+"."+str(j),vehicles[i][j])
+#    while True:
+#        x = get_params("Podaj pojazd który ciebie interesuje: ",1)
+#        try:
+#            return(vehicle_c[int(x[:x.index(".")])][int(x[x.index(".")+1:])])
+#            break
+#        except IndexError:
+#            print("Wybrana opcja nie istnieje")
+#        except ValueError:
+#            print("Wartośc nie jest liczbą lub zabrakło '.' pomiędzy liczbami.")
 
 def display_hello():
     """Wyświetlanie wiadomości powitalnej"""
@@ -152,8 +153,8 @@ def display_hello():
     print("""Witam w Generatorze Komend w symulatorze Train Driver 2\t
             Jest to wersja wczesna, błędy można zgłaszać na forum,github,dc:czak#4333\t\t
                 Dziękuje za testowanie aplikacji\n""")
-    File_test("squad.txt").file_exist()
-    File_test("posts.txt").file_exist()
+    File_test("sklady_helper.txt").file_exist()
+    File_test("posterunki_helper.txt").file_exist()
 
 
 def menu():
@@ -186,8 +187,8 @@ def get_params(question,req):
 def sq_generator(parms):
     """Generuje komendy do spwanowania składu, zwraca: """
     try:
-        file1 = File_test("squad.txt")
-        file2 = File_test("posts.txt")
+        file1 = File_test("sklady_helper.txt")
+        file2 = File_test("posterunki_helper.txt")
     except: return 0
 
     while True:
@@ -218,7 +219,7 @@ def sq_generator(parms):
     while True:
         choice = get_params("Czy chcesz coś dodać do obecnego składu? t/n: ",1)
         if choice.lower() == "t":
-            file3 = File_test("squad.txt")
+            file3 = File_test("sklady_helper.txt")
             for i in range(2):
                 parms[5] = ""
                 if i == 0:
@@ -245,36 +246,38 @@ def kick_generator(parms):
     parms[0] = get_params("Podaj nick lub indetyfikator gracza: ",1)
     parms[1] = get_params("Podaj powód (niewymagane): ",0)
     return parms
+
+def write_to_file(file,message):
+    history = open(file,"a")
+    history.write("\n"+message)
+    history.close()
+
 def cmd_generator(parms,choice):
     """Generuje komendy"""
     if choice in ("1","2"):
         print("\nWygenerowana komenda")
     if choice == "1":
         command = "/sp " +parms[0].title()+parms[1].title()+ ":" +parms[2]+ " n:" +parms[3]+ "," +parms[4]
-        print("\t/sp " +parms[0].title()+parms[1].title()+ ":" +parms[2], "n:" +parms[3]+ "," +parms[4])
-        history = open("history.txt","a")
-        history.write("\n"+repr(command))
-        history.close()
+        print("\t"+command)
+        write_to_file("historia_helper.txt",repr(command))
     elif choice == "2":
         command = "/kick_driver "+parms[0]+" "+parms[1]
-        print("\t/kick_driver",parms[0],parms[1])
-        history = open("history.txt","a")
-        history.write("\n"+repr(command))
-        history.close()
+        print("\t"+command)
+        write_to_file("historia_helper.txt",repr(command))
     elif choice == "3":
         return 0
     else:print("Wystąpił Błąd")
 
 def history():
     try:
-        f = open("history.txt","r")
+        f = open("historia_helper.txt","r")
     except IOError:
-        print("Brakuje pliku history.txt")
+        print("Brakuje pliku historia_helper.txt")
     else:
         print("\nHistoria 5 ostatnich komend:")
         pos = 1
         history = f.readlines()
-        for i in range(len(history)-5,len(history)):
+        for i in range(len(history)-6,len(history)):
             if len(history[i]) < 2:
                 continue
             else:
@@ -301,5 +304,5 @@ def main():
         
 main()
 
-#File_test("posts.txt").pick_object()
+#File_test("posterunki_helper.txt").pick_object()
 #input("\nNaciśnij enter aby zakończyć!\n")
