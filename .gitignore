@@ -4,3 +4,7 @@
 .vscode/
 dirtycode.py
 *.txt
+*.exe
+/dist/
+/build/
+*.spec
