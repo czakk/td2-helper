@@ -91,62 +91,6 @@ class File_test(object):
             except ValueError:
                 print("Podana wartość jest nieprawidłowa")
 
-#def load_vehicle(file_path):
-#    """Wczytuje liste pojazdów i przypisuje je do listy veh"""
-#    file = File_test("sklady_helper.txt")
-#    vehicle_d,vehicle_c = file.list_display()
-#    title = []
-#    def titles(list1,list2):
-#       """Usuwa title z pliku squad.txt"""
-#       for i in list1:
-#          if i[0] == "<":
-#              list2.append(i[1:])
-#              list1.pop(list1.index(i))
-#    titles(vehicle_c,title)
-#    veh = []
-#    for i in range (len(title)):
-#        veh.append([])
-#    for i in range(len(title)):
-#        for j in range(vehicle_c.index("end")):
-#            veh[i].append(vehicle_c[j].replace("\n",""))
-#        del vehicle_c[0:vehicle_c.index("end")+1]
-#    file.file.close()
-#    return veh,title
-
-#def choice_post():
-#     file = File_test("post.txt")
-#     display,choice = file.list_display()
-#     for i in range(len(display)):
-#        print(str(i)+".",display[i])
-#     while True:
-#        x = get_params("Który posterunek wybierasz?: ",1)
-#        try:
-#            return(choice[int(x)])
-#            break
-#        except IndexError:
-#            print("Wybrana opcja nie istnieje")
-#        except ValueError:
-#            print("Wartośc musi być liczbą")
-
-#def choice_vehicle():
-#    """Wyświetla i zwraca pojazd z pliku squad.txt"""
-#    file = File_test("sklady_helper.txt")
-#    vehicle,titles = load_vehicle("sklady_helper.txt")
-#    vehicles,vehicle_c = file.list_display()
-#    for i in range(len()):
-#        print("\n"+titles[i])
-#        for j in range(len(vehicles[i])):
-#            print(str(i)+"."+str(j),vehicles[i][j])
-#    while True:
-#        x = get_params("Podaj pojazd który ciebie interesuje: ",1)
-#        try:
-#            return(vehicle_c[int(x[:x.index(".")])][int(x[x.index(".")+1:])])
-#            break
-#        except IndexError:
-#            print("Wybrana opcja nie istnieje")
-#        except ValueError:
-#            print("Wartośc nie jest liczbą lub zabrakło '.' pomiędzy liczbami.")
-
 def display_hello():
     """Wyświetlanie wiadomości powitalnej"""
 
@@ -260,10 +204,12 @@ def cmd_generator(parms,choice):
         command = "/sp " +parms[0].title()+parms[1].title()+ ":" +parms[2]+ " n:" +parms[3]+ "," +parms[4]
         print("\t"+command)
         write_to_file("historia_helper.txt",repr(command))
+        return command
     elif choice == "2":
         command = "/kick_driver "+parms[0]+" "+parms[1]
         print("\t"+command)
         write_to_file("historia_helper.txt",repr(command))
+        return command
     elif choice == "3":
         return 0
     else:print("Wystąpił Błąd")
@@ -300,9 +246,40 @@ def main():
             sys.exit()
         cmd_generator(parms,choice)
         print("\n")
+#TEST
+#def test_get_parms():
+#    # given
+#    question = "Podaj testowa odpowiedz: "
+#    req = 1
+#    # when
+#    result = get_params(question,req)
+#    # then
+#    assert result == "test ok"
 
-        
-main()
+def test_cmd_generator_kick():
+    # given
+    parms = ["Kolejarz123","Trolling"]
+    choice = "2"
+    # when
+    result = cmd_generator(parms,choice)
+    # then
+    assert result == "/kick_driver Kolejarz123 Trolling"
 
-#File_test("posterunki_helper.txt").pick_object()
-#input("\nNaciśnij enter aby zakończyć!\n")
+def test_cmd_generator_sklad():
+    #given
+    parms = ["im_", "m2","5","10","test"]
+    choice = "1"
+    # when
+    result = cmd_generator(parms,choice)
+    # then
+    assert result == "/sp Im_M2:5 n:10,test"
+
+def test_File_Test():
+    # given
+    file = "sklady_helper.txt"
+    file2 = "posterunki_helper.txt"
+    # then
+    assert File_test(file).file_exist() != False
+    assert File_test(file2).file_exist() != False
+ 
+

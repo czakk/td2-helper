@@ -8,3 +8,6 @@ dirtycode.py
 /dist/
 /build/
 *.spec
+/Helper/__pycache__/
+/Helper//.pytest_cache/
+/Helper/.vs/
