@@ -2,7 +2,7 @@
 #   Title: TD2 Helper;
 #   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.9;Last-Update: 26/01/2021 by czak;
 import sys
-
+import Tests
 
 class File_test(object):
     """Testuje pliki czy posiadają poprawne parametry"""
@@ -246,40 +246,5 @@ def main():
             sys.exit()
         cmd_generator(parms,choice)
         print("\n")
-#TEST
-#def test_get_parms():
-#    # given
-#    question = "Podaj testowa odpowiedz: "
-#    req = 1
-#    # when
-#    result = get_params(question,req)
-#    # then
-#    assert result == "test ok"
 
-def test_cmd_generator_kick():
-    # given
-    parms = ["Kolejarz123","Trolling"]
-    choice = "2"
-    # when
-    result = cmd_generator(parms,choice)
-    # then
-    assert result == "/kick_driver Kolejarz123 Trolling"
-
-def test_cmd_generator_sklad():
-    #given
-    parms = ["im_", "m2","5","10","test"]
-    choice = "1"
-    # when
-    result = cmd_generator(parms,choice)
-    # then
-    assert result == "/sp Im_M2:5 n:10,test"
-
-def test_File_Test():
-    # given
-    file = "sklady_helper.txt"
-    file2 = "posterunki_helper.txt"
-    # then
-    assert File_test(file).file_exist() != False
-    assert File_test(file2).file_exist() != False
- 
-
+main()
