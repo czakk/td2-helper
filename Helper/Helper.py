@@ -2,7 +2,6 @@
 #   Title: TD2 Helper;
 #   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.9;Last-Update: 26/01/2021 by czak;
 import sys
-import Tests
 
 class File_test(object):
     """Testuje pliki czy posiadają poprawne parametry"""
@@ -68,7 +67,7 @@ class File_test(object):
         return objects,display_objects
         
     
-    def pick_object(self):
+    def pick_object(self, test = 0):
         pick,display = self.display_list()
         titles = []
         for i in range(len(pick)):
@@ -83,13 +82,15 @@ class File_test(object):
         while True:
             choice = get_params("\nKtóry obiekt Ciebie interesuje?: ",1)
             try:
-                self.file.close()
                 return pick[int(choice[:choice.index(".")])][int(choice[choice.index(".")+1:])]
+                self.file.close()
                 break
             except IndexError:
                 print("Na wybranej pozycji nie znajduje się obiekt")
+                return False
             except ValueError:
                 print("Podana wartość jest nieprawidłowa")
+                return False
 
 def display_hello():
     """Wyświetlanie wiadomości powitalnej"""
