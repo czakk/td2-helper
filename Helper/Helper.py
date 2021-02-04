@@ -2,6 +2,7 @@
 #   Title: TD2 Helper;
 #   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.9;Last-Update: 26/01/2021 by czak;
 import sys
+import order
 
 class File_test(object):
     """Testuje pliki czy posiadają poprawne parametry"""
@@ -247,5 +248,5 @@ def main():
             sys.exit()
         cmd_generator(parms,choice)
         print("\n")
-
 main()
+#test
