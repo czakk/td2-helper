@@ -1,6 +1,7 @@
 *.suo
 *.pyproj
 *.sln
+*.jpg
 .vscode/
 dirtycode.py
 *.txt
@@ -12,3 +13,4 @@ dirtycode.py
 /Helper//.pytest_cache/
 /Helper/.vs/
 /Helper/.idea/
+/Helper/Orders/
