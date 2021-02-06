@@ -11,3 +11,4 @@ dirtycode.py
 /Helper/__pycache__/
 /Helper//.pytest_cache/
 /Helper/.vs/
+/Helper/.idea/
