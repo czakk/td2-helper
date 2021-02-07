@@ -14,8 +14,8 @@ class Order:
 
     @staticmethod
     def get_args(question: str, require: bool) -> str:
-        """Function return user answer, in parameters we require question to insert in input and bool of answer is
-        necessary """
+        """Function return user answer, in parameters we require question to insert in input and bool whether answer is
+            necessary """
         answer: str = ""
         if require:
             while answer == "":
@@ -156,6 +156,7 @@ class Order_N(Order):
             self.draw_line(((280, 1022), (1356, 1022)))
 
             # code
+            coords = ((), ())
             self.draw_text((617, 1043), self.get_args("Wyjazd z toru nr: ", True))
             self.draw_text((889, 1113), self.get_args("Wyjazd w kierunku?: ", True))
             print("""
@@ -170,6 +171,8 @@ class Order_N(Order):
                 coords = ((548, 1215), (628, 1215))
             else:
                 print("Prosze podać poprawną opcję")
+
+            self.draw_line(coords)
 
             self.draw_text((1092, 1180), self.get_args("Wjazd na tor nr?: ", True))
 
@@ -206,6 +209,110 @@ class Order_N(Order):
         self.draw_text((649, 1476), self.get_args("Najpózniej o godzinie (podaj samą godzine bez minut i sekund): ", True))
         self.draw_text((973, 1476), self.get_args("minucie: ", True))
 
+    def plot_4(self):
+
+        self.draw_text((929, 1580), self.get_args("Wjazd z toru szlakowego nr: ", True))
+
+        coords = ((0, 0), (0, 0))
+        print("""
+        Wjazd na:
+        1. Stację
+        2. Posterunek odgałęźny
+        """)
+        choice = self.get_args("Co wybierasz?: ", True)
+        if choice == "1":
+            coords = ((430, 1725), (806, 1725))
+        elif choice == "2":
+            coords = ((292, 1725), (395, 1725))
+        else:
+            print("Prosze podać poprawną opcję")
+
+        self.draw_line(coords)
+
+        self.draw_text((821, 1678), self.get_args("Nazwa Stacji/Posterunku: ", True))
+
+        coords1 = ((0, 0), (0, 0))
+        coords2 = ((0, 0), (0, 0))
+        print("""
+        Wjazd odbędzie się po:
+        1. Sygnału zastępczego "Sz"
+        2. Rozkazu pisemnego "N"
+        """)
+        choice = self.get_args("Co wybierasz?: ", True)
+        if choice == "1":
+            coords1 = ((275, 2005), (1338, 2005))
+            coords2 = ((275, 2065), (655, 2065))
+
+            coords = ((0, 0), (0, 0))
+            print("""
+            Urządzenie ustawione:
+            1. Z lewej
+            2. Z prawej
+            """)
+
+            choice = self.get_args("Co wybierasz?: ", True)
+
+            if choice == "1":
+                coords = ((648, 1922), (802, 1922))
+            elif choice == "2":
+                coords = ((490, 1922), (618, 1922))
+            else:
+                print("Prosze podać poprawną opcję")
+
+            self.draw_line(coords)
+
+        elif choice == "2":
+            coords1 = ((275, 1865), (1130, 1865))
+            coords2 = ((275, 1923), (1000, 1923))
+        else:
+            print("Prosze podać poprawną opcję")
+
+        self.draw_line(coords1)
+        self.draw_line(coords2)
+
+    def plot_5(self):
+
+        self.draw_text((1190, 2155), self.get_args("Wjazd z toru nr: ", True))
+
+        self.draw_text((442, 2244), self.get_args("Z kierunku: ", True))
+
+        coords = ((0, 0), (0, 0))
+        print("""
+        Na:
+        1. Stację
+        2. Posterunek odgałęźny
+        """)
+        choice = self.get_args("Co wybierasz?: ", True)
+        if choice == "1":
+            coords = ((880, 2296), (1150, 2296))
+        elif choice == "2":
+            coords = ((745, 2296), (845, 2296))
+        else:
+            print("Prosze podać poprawną opcję")
+
+        self.draw_line(coords)
+
+        self.draw_text((1160, 2244), self.get_args("Nazwa Stacji/Posterunku: ", True))
+
+        self.draw_text((882, 2336), self.get_args("I przejechać obok sygnału \"Stój\" na: ", True))
+
+    def plot_6(self):
+        get = ""
+        while True:
+            get = self.get_args("Co chcesz umieścić w Inne?: ", False)
+            if len(get) > 192:
+                print("Podana wiadomość jest za długa")
+            else:
+                break
+
+        text = ""
+        for i in range(len(get)):
+            text += get[i]
+            if i == 38 or i == 38*2 or i == 38*3 or i == i == 38*4:
+                text += "\n"
+
+        self.draw.multiline_text((261, 2548), text, font=self.fnt, fill=(0, 0, 0))
+
     def finish_order(self):
 
         self.get_information()
@@ -216,7 +323,10 @@ class Order_N(Order):
             1. Tor Zamknięty Od-Do
             2. Wjazd na nieprawidłowy tor
             3. Pchanie pociągu
-            8. Koniec tworzenia rozkazu
+            4. Wjazd z toru szlakowego
+            5. Wjazd na tor szlakowy obok sygnału "Stój"
+            6. Inne
+            7. Koniec tworzenia rozkazu
             """)
             plot = self.get_args("Podaj którą działka jesteś zainteresowany: ", True)
             if plot in used_plots:
@@ -231,7 +341,13 @@ class Order_N(Order):
                 self.plot_2()
             elif plot == "3":
                 self.plot_3()
-            elif plot == "8":
+            elif plot == "4":
+                self.plot_4()
+            elif plot == "5":
+                self.plot_5()
+            elif plot == "6":
+                self.plot_6()
+            elif plot == "7":
                 self.image.show()
                 self.image.save("Orders/" + "N" + self.train_number + "." + self.order_number + "." + self.date[:2] + ".jpg")
                 break
