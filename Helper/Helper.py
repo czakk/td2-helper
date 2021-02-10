@@ -2,8 +2,9 @@
 #   Title: TD2 Helper;
 #   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.9;Last-Update: 26/01/2021 by czak;
 import sys
-import Order
 
+
+# import Order
 
 class File_test(object):
     """Testuje pliki czy posiadają poprawne parametry"""
@@ -39,6 +40,8 @@ class File_test(object):
             print("Plik", self.file_name, "został zainicjowany \n")
         else:
             return False
+
+        return True
 
     def display_list(self):
         """Praca z plikiem"""
@@ -205,9 +208,9 @@ def kick_generator(parms):
 
 
 def write_to_file(file, message):
-    history = open(file, "a")
-    history.write("\n" + message)
-    history.close()
+    f = open(file, "a")
+    f.write("\n" + message)
+    f.close()
 
 
 def cmd_generator(parms, choice):
@@ -232,7 +235,7 @@ def cmd_generator(parms, choice):
 
 def history():
     try:
-        f = open("history_helper.txt", "r")
+        f = open("historia_helper.txt", "r")
     except IOError:
         print("Brakuje pliku historia_helper.txt")
     else:
@@ -265,3 +268,5 @@ def main():
         cmd_generator(parms, choice)
         print("\n")
 
+
+main()

@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 class Order:
     def __init__(self, order):
         now = datetime.now()
+        self.order_type = order
         self.order_number: int = 0
         self.train_number: int = 0
         self.date = now.strftime("%d,%y")
@@ -26,17 +27,23 @@ class Order:
         return answer
 
     def get_information(self):
+        # Coords for N type Order
+        if self.order_type == "N":
+            coords1 = (1080, 95)
+            coords2 = (467, 215)
+            coords3 = (960, 215)
+            coords4 = (1248, 215)
         # get and print Order Number
         self.order_number = self.get_args("Podaj numer rozkazu: ", True)
-        self.draw_text((1080, 95), self.order_number)
+        self.draw_text(coords1, self.order_number)
 
         # get and print Train Number
         self.train_number = self.get_args("Podaj numer pociągu: ", True)
-        self.draw_text((467, 215), self.train_number)
+        self.draw_text(coords2, self.train_number)
 
         # print date
-        self.draw_text((960, 215), self.date[:2])
-        self.draw_text((1248, 215), self.date[3:])
+        self.draw_text(coords3, self.date[:2])
+        self.draw_text(coords4, self.date[3:])
 
     def draw_text(self, coords: tuple, text: str):
         self.draw.text(coords, text, font=self.fnt, fill=(0, 0, 0))
@@ -62,140 +69,154 @@ class Order_N(Order):
         self.draw_text((1143, 439), drive_allow)
 
     def plot_2(self):
-
-        print("""
-        Zezwolenie po:
-        1. Sygnale "Nakaz Jazdy"
-        2. Tylko tego rozkazu pisemnego
-        """)
-        choice = self.get_args("Co wybierasz?: ", True)
-        if choice == "1":
-            self.draw_line(((768, 628), (1285, 628)))
-        elif choice == "2":
-            self.draw_line(((819, 570), (1230, 570)))
-        else:
-            print("Prosze podać poprawną opcję")
-
-        print("""
-        Czy przy szlaku jest umieszczony semafor?:
-        1. Tak
-        2. Nie
-        """)
-        choice = self.get_args("Co wybierasz?: ", True)
-        if choice == "1":
-            # strike
-            self.draw_line(((269, 1075), (1355, 1075)))
-            self.draw_line(((262, 1150), (1355, 1150)))
-            self.draw_line(((262, 1215), (1352, 1215)))
-
-            # code
+        while True:
             print("""
-            Semafor:
-            1. Wyjazdowy
-            2. Drogowskazowy
-            3. Wjazdowy
+            Zezwolenie po:
+            1. Sygnale "Nakaz Jazdy"
+            2. Tylko tego rozkazu pisemnego
             """)
             choice = self.get_args("Co wybierasz?: ", True)
-            sem = self.get_args("Znacznik semafora?: ", True)
             if choice == "1":
-                # Drogowskazowy
-                self.draw_line(((262, 810), (1352, 810)))
-                # Wjazdowy
-                self.draw_line(((262, 810), (1352, 810)))
-
-                # Semafor
-                self.draw_text((600, 715), sem.title())
-
+                self.draw_line(((768, 628), (1285, 628)))
+                break
             elif choice == "2":
-                # Wyjazdowy
-                self.draw_line(((262, 752), (750, 752)))
+                self.draw_line(((819, 570), (1230, 570)))
+                break
+            else:
+                print("Prosze podać poprawną opcję")
 
-                # Wjazdowy
+        while True:
+            print("""
+            Czy przy szlaku jest umieszczony semafor?:
+            1. Tak
+            2. Nie
+            """)
+            choice = self.get_args("Co wybierasz?: ", True)
+            if choice == "1":
+                # strike
+                self.draw_line(((269, 1075), (1355, 1075)))
+                self.draw_line(((262, 1150), (1355, 1150)))
+                self.draw_line(((262, 1215), (1352, 1215)))
+
+                # code
+                while True:
+                    print("""
+                    Semafor:
+                    1. Wyjazdowy
+                    2. Drogowskazowy
+                    3. Wjazdowy
+                    """)
+                    choice = self.get_args("Co wybierasz?: ", True)
+                    sem = self.get_args("Znacznik semafora?: ", True)
+                    if choice == "1":
+                        # Drogowskazowy
+                        self.draw_line(((262, 810), (1352, 810)))
+                        # Wjazdowy
+                        self.draw_line(((262, 810), (1352, 810)))
+
+                        # Semafor
+                        self.draw_text((600, 715), sem.title())
+                        break
+                    elif choice == "2":
+                        # Wyjazdowy
+                        self.draw_line(((262, 752), (750, 752)))
+
+                        # Wjazdowy
+                        self.draw_line(((262, 873), (1352, 873)))
+
+                        # Semafor
+                        self.draw_text((670, 775), sem.title())
+                        break
+                    elif choice == "3":
+                        # Wyjazdowy
+                        self.draw_line(((262, 752), (750, 752)))
+
+                        # Drogowskazowy
+                        self.draw_line(((262, 810), (1352, 810)))
+
+                        # Semafor
+                        self.draw_text((600, 835), sem.title())
+                        break
+                    else:
+                        print("Prosze podać poprawną opcję")
+
+                self.draw_text((720, 905), self.get_args("Wyjazd w kierunku?: ", True))
+                coords = ((0, 0), (0, 0))
+                while True:
+                    print("""
+                    Wyjazd na szlak:
+                    1. Lewy
+                    2. Prawy
+                    """)
+                    choice = self.get_args("Co wybierasz?: ", True)
+                    if choice == "1":
+                        coords = ((657, 1020), (767, 1020))
+                        break
+                    elif choice == "2":
+                        coords = ((548, 1020), (628, 1020))
+                        break
+                    else:
+                        print("Prosze podać poprawną opcję")
+
+                self.draw_line(coords)
+                self.draw_text((1040, 985), self.get_args("Wyjazd na tor nr: ", True))
+                break
+            elif choice == "2":
+                # strike
+                self.draw_line(((270, 692), (1205, 692)))
+                self.draw_line(((262, 752), (750, 752)))
+                self.draw_line(((262, 810), (1352, 810)))
                 self.draw_line(((262, 873), (1352, 873)))
+                self.draw_line(((280, 943), (1356, 943)))
+                self.draw_line(((280, 1022), (1356, 1022)))
 
-                # Semafor
-                self.draw_text((670, 775), sem.title())
+                # code
+                coords = ((), ())
+                self.draw_text((617, 1043), self.get_args("Wyjazd z toru nr: ", True))
+                self.draw_text((889, 1113), self.get_args("Wyjazd w kierunku?: ", True))
+                while True:
+                    print("""
+                    Wyjazd na szlak:
+                    1. Lewy
+                    2. Prawy
+                    """)
+                    choice = self.get_args("Co wybierasz?: ", True)
+                    if choice == "1":
+                        coords = ((657, 1020), (767, 1020))
+                        break
+                    elif choice == "2":
+                        coords = ((548, 1215), (628, 1215))
+                        break
+                    else:
+                        print("Prosze podać poprawną opcję")
 
-            elif choice == "3":
-                # Wyjazdowy
-                self.draw_line(((262, 752), (750, 752)))
+                self.draw_line(coords)
 
-                # Drogowskazowy
-                self.draw_line(((262, 810), (1352, 810)))
-
-                # Semafor
-                self.draw_text((600, 835), sem.title())
-
+                self.draw_text((1092, 1180), self.get_args("Wjazd na tor nr?: ", True))
+                break
             else:
                 print("Prosze podać poprawną opcję")
-
-            self.draw_text((720, 905), self.get_args("Wyjazd w kierunku?: ", True))
-            coords = ((0, 0), (0, 0))
-            print("""
-            Wyjazd na szlak:
-            1. Lewy
-            2. Prawy
-            """)
-            choice = self.get_args("Co wybierasz?: ", True)
-            if choice == "1":
-                coords = ((657, 1020), (767, 1020))
-            elif choice == "2":
-                coords = ((548, 1020), (628, 1020))
-            else:
-                print("Prosze podać poprawną opcję")
-
-            self.draw_line(coords)
-            self.draw_text((1040, 985), self.get_args("Wyjazd na tor nr: ", True))
-        elif choice == "2":
-            # strike
-            self.draw_line(((270, 692), (1205, 692)))
-            self.draw_line(((262, 752), (750, 752)))
-            self.draw_line(((262, 810), (1352, 810)))
-            self.draw_line(((262, 873), (1352, 873)))
-            self.draw_line(((280, 943), (1356, 943)))
-            self.draw_line(((280, 1022), (1356, 1022)))
-
-            # code
-            coords = ((), ())
-            self.draw_text((617, 1043), self.get_args("Wyjazd z toru nr: ", True))
-            self.draw_text((889, 1113), self.get_args("Wyjazd w kierunku?: ", True))
-            print("""
-            Wyjazd na szlak:
-            1. Lewy
-            2. Prawy
-            """)
-            choice = self.get_args("Co wybierasz?: ", True)
-            if choice == "1":
-                coords = ((657, 1020), (767, 1020))
-            elif choice == "2":
-                coords = ((548, 1215), (628, 1215))
-            else:
-                print("Prosze podać poprawną opcję")
-
-            self.draw_line(coords)
-
-            self.draw_text((1092, 1180), self.get_args("Wjazd na tor nr?: ", True))
-
-        else:
-            print("Prosze podać poprawną opcję")
 
     def plot_3(self):
         coords1 = ((0, 0), (0, 0))
         coords2 = ((0, 0), (0, 0))
-        print("""
-        Przemieszczenie pociągu:
-        1. Jazda
-        2. Pchanie
-        """)
-        choice = self.get_args("Co wybierasz?: ", True)
-        if choice == "1":
-            coords1 = ((375, 1328), (580, 1328))
-            coords2 = ((396, 1451), (583, 1451))
-        elif choice == "2":
-            coords1 = ((241, 1328), (339, 1328))
-            coords2 = ((241, 1451), (362, 1451))
-        else:
-            print("Prosze podać poprawną opcję")
+        while True:
+            print("""
+            Przemieszczenie pociągu:
+            1. Jazda
+            2. Pchanie
+            """)
+            choice = self.get_args("Co wybierasz?: ", True)
+            if choice == "1":
+                coords1 = ((375, 1328), (580, 1328))
+                coords2 = ((396, 1451), (583, 1451))
+                break
+            elif choice == "2":
+                coords1 = ((241, 1328), (339, 1328))
+                coords2 = ((241, 1451), (362, 1451))
+                break
+            else:
+                print("Prosze podać poprawną opcję")
 
         self.draw_line(coords1)
         self.draw_line(coords2)
@@ -214,18 +235,21 @@ class Order_N(Order):
         self.draw_text((929, 1580), self.get_args("Wjazd z toru szlakowego nr: ", True))
 
         coords = ((0, 0), (0, 0))
-        print("""
-        Wjazd na:
-        1. Stację
-        2. Posterunek odgałęźny
-        """)
-        choice = self.get_args("Co wybierasz?: ", True)
-        if choice == "1":
-            coords = ((430, 1725), (806, 1725))
-        elif choice == "2":
-            coords = ((292, 1725), (395, 1725))
-        else:
-            print("Prosze podać poprawną opcję")
+        while True:
+            print("""
+            Wjazd na:
+            1. Stację
+            2. Posterunek odgałęźny
+            """)
+            choice = self.get_args("Co wybierasz?: ", True)
+            if choice == "1":
+                coords = ((430, 1725), (806, 1725))
+                break
+            elif choice == "2":
+                coords = ((292, 1725), (395, 1725))
+                break
+            else:
+                print("Prosze podać poprawną opcję")
 
         self.draw_line(coords)
 
@@ -233,39 +257,44 @@ class Order_N(Order):
 
         coords1 = ((0, 0), (0, 0))
         coords2 = ((0, 0), (0, 0))
-        print("""
-        Wjazd odbędzie się po:
-        1. Sygnału zastępczego "Sz"
-        2. Rozkazu pisemnego "N"
-        """)
-        choice = self.get_args("Co wybierasz?: ", True)
-        if choice == "1":
-            coords1 = ((275, 2005), (1338, 2005))
-            coords2 = ((275, 2065), (655, 2065))
-
-            coords = ((0, 0), (0, 0))
+        while True:
             print("""
-            Urządzenie ustawione:
-            1. Z lewej
-            2. Z prawej
+            Wjazd odbędzie się po:
+            1. Sygnału zastępczego "Sz"
+            2. Rozkazu pisemnego "N"
             """)
-
             choice = self.get_args("Co wybierasz?: ", True)
-
             if choice == "1":
-                coords = ((648, 1922), (802, 1922))
+                coords1 = ((275, 2005), (1338, 2005))
+                coords2 = ((275, 2065), (655, 2065))
+
+                coords = ((0, 0), (0, 0))
+                while True:
+                    print("""
+                    Urządzenie ustawione:
+                    1. Z lewej
+                    2. Z prawej
+                    """)
+
+                    choice = self.get_args("Co wybierasz?: ", True)
+
+                    if choice == "1":
+                        coords = ((648, 1922), (802, 1922))
+                        break
+                    elif choice == "2":
+                        coords = ((490, 1922), (618, 1922))
+                        break
+                    else:
+                        print("Prosze podać poprawną opcję")
+
+                self.draw_line(coords)
+                break
             elif choice == "2":
-                coords = ((490, 1922), (618, 1922))
+                coords1 = ((275, 1865), (1130, 1865))
+                coords2 = ((275, 1923), (1000, 1923))
+                break
             else:
                 print("Prosze podać poprawną opcję")
-
-            self.draw_line(coords)
-
-        elif choice == "2":
-            coords1 = ((275, 1865), (1130, 1865))
-            coords2 = ((275, 1923), (1000, 1923))
-        else:
-            print("Prosze podać poprawną opcję")
 
         self.draw_line(coords1)
         self.draw_line(coords2)
@@ -277,18 +306,21 @@ class Order_N(Order):
         self.draw_text((442, 2244), self.get_args("Z kierunku: ", True))
 
         coords = ((0, 0), (0, 0))
-        print("""
-        Na:
-        1. Stację
-        2. Posterunek odgałęźny
-        """)
-        choice = self.get_args("Co wybierasz?: ", True)
-        if choice == "1":
-            coords = ((880, 2296), (1150, 2296))
-        elif choice == "2":
-            coords = ((745, 2296), (845, 2296))
-        else:
-            print("Prosze podać poprawną opcję")
+        while True:
+            print("""
+            Na:
+            1. Stację
+            2. Posterunek odgałęźny
+            """)
+            choice = self.get_args("Co wybierasz?: ", True)
+            if choice == "1":
+                coords = ((880, 2296), (1150, 2296))
+                break
+            elif choice == "2":
+                coords = ((745, 2296), (845, 2296))
+                break
+            else:
+                print("Prosze podać poprawną opcję")
 
         self.draw_line(coords)
 
