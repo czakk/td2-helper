@@ -10,7 +10,7 @@ class Order:
         self.train_number: int = 0
         self.date = now.strftime("%d,%y")
         self.image = Image.open("Order_template/" + order + ".JPG")
-        self.fnt = ImageFont.truetype("C:\WINDOWS\FONTS\ARIAL.TTF", 48)
+        self.fnt = ImageFont.truetype("Fonts/arial.ttf.", 48)
         self.draw = ImageDraw.Draw(self.image)
 
     @staticmethod
@@ -29,10 +29,22 @@ class Order:
     def get_information(self):
         # Coords for N type Order
         if self.order_type == "N":
+            # Order number
             coords1 = (1080, 95)
+            # Train number
             coords2 = (467, 215)
+            # Day
             coords3 = (960, 215)
+            # Year
             coords4 = (1248, 215)
+        elif self.order_type == "S":
+            # Order number
+            coords1 = (1124, 80)
+            # Train number
+            coords2 = (575, 225)
+            # Day
+            coords3 = (1340, 230)
+
         # get and print Order Number
         self.order_number = self.get_args("Podaj numer rozkazu: ", True)
         self.draw_text(coords1, self.order_number)
@@ -43,7 +55,8 @@ class Order:
 
         # print date
         self.draw_text(coords3, self.date[:2])
-        self.draw_text(coords4, self.date[3:])
+        if self.order_type != "S":
+            self.draw_text(coords4, self.date[3:])
 
     def draw_text(self, coords: tuple, text: str):
         self.draw.text(coords, text, font=self.fnt, fill=(0, 0, 0))
@@ -52,7 +65,6 @@ class Order:
         self.draw.line(coords, fill=(0, 0, 0), width=width, joint="curve")
 
 
-# noinspection PyTypeChecker
 class Order_N(Order):
 
     def plot_1(self):
@@ -227,7 +239,8 @@ class Order_N(Order):
 
         self.draw_text((1223, 1414), self.get_args("Wracać będzie po lewym torze nr: ", True))
 
-        self.draw_text((649, 1476), self.get_args("Najpózniej o godzinie (podaj samą godzine bez minut i sekund): ", True))
+        self.draw_text((649, 1476),
+                       self.get_args("Najpózniej o godzinie (podaj samą godzine bez minut i sekund): ", True))
         self.draw_text((973, 1476), self.get_args("minucie: ", True))
 
     def plot_4(self):
@@ -340,7 +353,7 @@ class Order_N(Order):
         text = ""
         for i in range(len(get)):
             text += get[i]
-            if i == 38 or i == 38*2 or i == 38*3 or i == i == 38*4:
+            if i == 38 or i == 38 * 2 or i == 38 * 3 or i == i == 38 * 4:
                 text += "\n"
 
         self.draw.multiline_text((261, 2548), text, font=self.fnt, fill=(0, 0, 0))
@@ -368,7 +381,6 @@ class Order_N(Order):
                 used_plots.append(plot)
             if plot == "1":
                 self.plot_1()
-
             elif plot == "2":
                 self.plot_2()
             elif plot == "3":
@@ -381,7 +393,121 @@ class Order_N(Order):
                 self.plot_6()
             elif plot == "7":
                 self.image.show()
-                self.image.save("Orders/" + "N" + self.train_number + "." + self.order_number + "." + self.date[:2] + ".jpg")
+                self.image.save(
+                    f"Orders/T{self.order_type}TN{self.train_number}ON{self.order_number}D{self.date[:2]}.jpg")
+                break
+            else:
+                print("Brak wartości")
+
+
+class Order_S(Order):
+    def plot1(self):
+        while True:
+            print("""
+            Zezwolenie po:
+            1. Sygnale "Nakaz Jazdy"
+            2. Tylko tego rozkazu pisemnego
+            """)
+            choice = self.get_args("Co wybierasz?: ", True)
+            if choice == "1":
+                self.draw_line(((825, 476), (1419, 476)))
+                break
+            elif choice == "2":
+                self.draw_line(((927, 412), (1365, 412)))
+                break
+            else:
+                print("Prosze podać poprawną opcję")
+
+        while True:
+            print("""
+                    Przy szlaku stoi semafor:
+                    1. Tak
+                    2. Nie
+                    """)
+            choice = self.get_args("Co wybierasz?: ", True)
+            if choice == "1":
+                # strike
+                self.draw_line(((306, 867), (1547, 867)))
+                self.draw_line(((306, 936), (574, 936)))
+
+                # code
+                while True:
+                    print("""
+                    Przejechać obok wskazującego sygnału "Stój" semafora:
+                    1. Wyjazdowego
+                    2. Drogowskazowego
+                    """)
+                    choice = self.get_args("Co wybierasz?: ", True)
+                    sem = self.get_args("Znacznik semafora?: ", True)
+                    if choice == "1":
+                        self.draw_line(((301, 716), (921, 716)))
+                        self.draw_line(((301, 766), (963, 766)))
+
+                        self.draw_text((576, 593), sem.title())
+                        break
+                    elif choice == "2":
+                        self.draw_line(((301, 635), (830, 635)))
+
+                        self.draw_text((673, 685), sem.title())
+                        break
+                    else:
+                        print("Prosze podać poprawną opcję")
+                break
+            elif choice == "2":
+                # strike
+                self.draw_line(((301, 716), (921, 716)))
+                self.draw_line(((301, 766), (963, 766)))
+                self.draw_line(((301, 635), (830, 635)))
+                self.draw_line(((305, 552), (1365, 552)))
+                # code
+                self.draw_text((673, 685), self.get_args("Wyjazd z toru nr: ", True))
+                break
+            else:
+                print("Prosze podać poprawną opcję")
+
+    def plot2(self):
+        pass
+
+    def finish_order(self):
+        self.get_information()
+        while True:
+            coords = ((), ())
+            print("""
+            Rozkaz dla:
+            1. Pociągu
+            2. Manewru
+            """)
+            plot = self.get_args("Co wybierasz?: ", True)
+            if plot == "1":
+                coords = ((237, 300), (440, 300))
+                break
+            elif plot == "2":
+                coords = ((254, 243), (455, 243))
+                break
+            else:
+                print("Brak wartości")
+
+        self.draw_line(coords)
+
+        used_plots = []
+
+        while True:
+            print("""
+            1. Zezwolenie na przejechanie obok sygnału "Stój" - Semafor Wyjazdowy
+            5. Koniec tworzenia rozkazu
+            """)
+            plot = self.get_args("Podaj którą działka jesteś zainteresowany: ", True)
+            if plot in used_plots:
+                print("Działka została już użyta")
+                continue
+            else:
+                used_plots.append(plot)
+            if plot == "1":
+                self.plot1()
+            elif plot == "5":
+                self.image.show()
+                self.image.save(
+                    f"Orders/T{self.order_type}TN{self.train_number}ON{self.order_number}D{self.date[:2]}.jpg")
                 break
             else:
                 print("Brak wartości")
@@ -406,7 +532,7 @@ def main():
     if order_type == "1":
         Order_N("N").finish_order()
     elif order_type == "2":
-        pass
+        Order_S("S").finish_order()
     elif order_type == "3":
         pass
 
