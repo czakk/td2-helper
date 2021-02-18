@@ -351,15 +351,15 @@ class Order_N(Order):
                 break
 
         text = ""
+        enter = 38
         for i in range(len(get)):
             text += get[i]
-            if i == 38 or i == 38 * 2 or i == 38 * 3 or i == i == 38 * 4:
+            if i == enter or i == enter * 2 or i == enter * 3 or i == i == enter * 4:
                 text += "\n"
 
         self.draw.multiline_text((261, 2548), text, font=self.fnt, fill=(0, 0, 0))
 
     def finish_order(self):
-
         self.get_information()
         used_plots = []
 
@@ -401,7 +401,7 @@ class Order_N(Order):
 
 
 class Order_S(Order):
-    def plot1(self):
+    def plot_1(self):
         while True:
             print("""
             Zezwolenie po:
@@ -465,8 +465,97 @@ class Order_S(Order):
             else:
                 print("Prosze podać poprawną opcję")
 
-    def plot2(self):
-        pass
+    def plot_2(self):
+        while True:
+            print("""
+            Zezwalam przejechać obok wskazującego sygnału "Stój" semafora:
+            1. Wjazdowego
+            2. Drogowskazowego
+            3. Odstępowego
+            4. Brak Semafora
+            """)
+            choice = self.get_args("Co wybierasz?: ", True)
+            sem = self.get_args("Znacznik semafora lub nr. toru (w przypadku wybrania opcji 4): ", True)
+            if choice == "1":
+                # strike
+
+                # Drogowskazowy
+                self.draw_line(((305, 1200), (956, 1200)))
+                self.draw_line(((305, 1248), (938, 1248)))
+                # Odstępowy
+                self.draw_line(((305, 1328), (812, 1328)))
+                # Brak Semafora
+                self.draw_line(((305, 1408), (1553, 1408)))
+                self.draw_line(((305, 1455), (555, 1455)))
+
+                self.draw_text((570, 1080), sem.title())
+                break
+            elif choice == "2":
+                # strike
+                # Wjazdowy
+                self.draw_line(((305, 1115), (840, 1115)))
+                # Odstępowy
+                self.draw_line(((305, 1328), (812, 1328)))
+                # Brak Semafora
+                self.draw_line(((305, 1408), (1553, 1408)))
+                self.draw_line(((305, 1455), (555, 1455)))
+
+                self.draw_text((668, 1165), sem.title())
+                break
+            elif choice == "3":
+                # strike
+                # Wjazdowy
+                self.draw_line(((305, 1115), (840, 1115)))
+                # Drogowskazowy
+                self.draw_line(((305, 1200), (956, 1200)))
+                self.draw_line(((305, 1248), (938, 1248)))
+                # Brak Semafora
+                self.draw_line(((305, 1408), (1553, 1408)))
+                self.draw_line(((305, 1455), (555, 1455)))
+
+                self.draw_text((580, 1290), sem.title())
+                break
+            elif choice == "4":
+                # strike
+                # Wjazdowy
+                self.draw_line(((305, 1115), (840, 1115)))
+                # Drogowskazowy
+                self.draw_line(((305, 1200), (956, 1200)))
+                self.draw_line(((305, 1248), (938, 1248)))
+                # Odstępowy
+                self.draw_line(((305, 1328), (812, 1328)))
+
+                self.draw_text((911, 1370), sem.title())
+                break
+            else:
+                print("Prosze podać poprawną opcję")
+
+    def plot_3(self):
+        self.draw_text((351, 1530), self.get_args("Od: ", True))
+        self.draw_text((746, 1530), self.get_args("Do: ", True))
+        self.draw_text((1290, 1530), self.get_args("Po torze nr: ", True))
+
+        self.draw_text((472, 1815), self.get_args("Ostatni pociąg nr: ", True))
+        self.draw_text((1011, 1815), self.get_args("Przybł do: ", True))
+        self.draw_text((279, 1910), self.get_args("O godzinie: ", True))
+
+    def plot_4(self):
+        get = ""
+        while True:
+            get = self.get_args("Co chcesz umieścić w Inne?: ", False)
+            if len(get) > 192:
+                print("Podana wiadomość jest za długa")
+            else:
+                break
+
+        text = ""
+        enter = 45
+        for i in range(len(get)):
+            text += get[i]
+            if i == enter or i == enter * 2 or i == enter * 3 or i == i == enter * 4:
+                text += "\n"
+
+        self.draw.multiline_text((279, 2100), text, font=self.fnt, fill=(0, 0, 0))
 
     def finish_order(self):
         self.get_information()
@@ -494,6 +583,9 @@ class Order_S(Order):
         while True:
             print("""
             1. Zezwolenie na przejechanie obok sygnału "Stój" - Semafor Wyjazdowy
+            2. Zezwolenie na przejechanie obok sygnału "Stój" - Semafor Wjazdowy
+            3. Ominięcie sygnału SBl
+            4. Inne
             5. Koniec tworzenia rozkazu
             """)
             plot = self.get_args("Podaj którą działka jesteś zainteresowany: ", True)
@@ -503,7 +595,13 @@ class Order_S(Order):
             else:
                 used_plots.append(plot)
             if plot == "1":
-                self.plot1()
+                self.plot_1()
+            elif plot == "2":
+                self.plot_2()
+            elif plot == "3":
+                self.plot_3()
+            elif plot == "4":
+                self.plot_4()
             elif plot == "5":
                 self.image.show()
                 self.image.save(
