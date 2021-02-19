@@ -3,6 +3,7 @@ Aplikacja stworzona dla graczy Symulatora [Train Driver 2](https://td2.info.pl/)
 ## Co aktualnie oferuje Aplikacja?
 - Generator tworzenia pojazdów - Kiedy gracz prosi nas o stworzenie np. 5 węglarek pod semaforem C wystarczy, że użyjemy  naszego **Generatora**, podamy odpowiednie parametry a w wyniku otrzymamy komendę gotowa do wklejenia na chat gry
 - Generator /kick_driver - Komenda pozwalająca wyrzucić nieodpowiedniego gracza z nasej scenerii
+- Generator rozkazów pisemnych w wersji graficznej
 - Historię pięciu ostatnich komend - Wyświetla pięć ostatnio utworzonych komend
 - Dwa modyfikowalne pliki tekstowe dzięki którym możemy szybciej i wygodniej tworzyć obiekty
 ## O co chodzi z modyfikowalnymi plikami?
@@ -22,6 +23,4 @@ Aplikacja stworzona dla graczy Symulatora [Train Driver 2](https://td2.info.pl/)
 | > | Stawiany przy obiekcie **PO SPACJI** pomaga nam opisać obiekt po lewej stronie znacznika. Ważne jest odpowiednie umiejscowienie znacznika, ponieważ musi być on poprzedzony spacją. Również po wstawieniu go musimy użyć spacji (np. Grafitti > Wagon pasazerski z Grafitti). Korzystanie z tego nie jest wymagane
 | end | Znacznik ten określa w którym miejscu chcemy zakończyć nasza kategorię. Zaleca się uzywanie raz na każdą kategorię |
 ## Instalacja
-Instalacja odbywa się poprzez **Instalator** (link)
-## O projekcie
-Projekt jest tworzony aktualnie przez jedną osobe
+Instalacja odbywa się poprzez **Instalator** (link). Do poprawnego działania potrzebujemy modułu Pillow
