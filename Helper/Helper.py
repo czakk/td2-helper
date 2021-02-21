@@ -88,10 +88,8 @@ class File_test(object):
                 break
             except IndexError:
                 print("Na wybranej pozycji nie znajduje się obiekt")
-                return False
             except ValueError:
                 print("Podana wartość jest nieprawidłowa")
-                return False
 
 
 def display_hello():
