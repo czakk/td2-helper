@@ -1,12 +1,12 @@
 #   github.com/czakk/td2-helper; author: czak; date:05/11/2020
 #   Title: TD2 Helper;
-#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.9;Last-Update: 26/01/2021 by czak;
+#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.9;Last-Update: 09/06/2021 by czak;
 import sys
 
 
 # import Order
 
-class File_test(object):
+class File(object):
     """Testuje pliki czy posiadają poprawne parametry"""
 
     def __init__(self, file):
@@ -23,20 +23,24 @@ class File_test(object):
             print("Plik", self.file_name, "nie może zostać zainicjowany. Kod błędu", self.__error, "\n")
             return False
 
-        # if not "<" in self.file.read():
-        #    print("W pliku",self.file_name,"brakuje tytułów ze znakiem '<'")
-        #    return False
-
-        # if not "end" in self.file.read():
-        #    print("W pliku",self.file_name,"brakuje znaczników 'end'")
-        #    return False
         def check_key(key):
             self.file.seek(0)
-            if not key in self.file.read():
+            if key not in self.file.read():
                 print("W pliku", self.file_name, "brakuje znacznika", key)
                 return False
 
-        if check_key("<") != False and check_key("end") != False:
+        def compareKeyCount(key1: str, key2: str) -> bool:
+            """Jeżeli liczba znacznika key1 nie jest równa key2 zwraca False"""
+            self.file.seek(0)  # Ustawiamy 'czytnik' w pliku na początek
+            text = self.file.read()
+            if text.count(key1) != text.count(key2):
+                print(f'W pliku {self.file_name} znaczników "{key1}" oraz "{key2}" musi być tyle samo!')
+                return False
+
+        if compareKeyCount('<', 'end') is False:
+            return False
+
+        if (check_key("<") is not False) and (check_key("end") is not False):
             print("Plik", self.file_name, "został zainicjowany \n")
         else:
             return False
@@ -71,21 +75,19 @@ class File_test(object):
 
     def pick_object(self):
         pick, display = self.display_list()
-        titles = []
-        for i in range(len(pick)):
-            titles.append(pick[i].pop(0))
+
+        titles = [pick[i].pop(0) for i in range(len(pick))]
 
         for i in range(len(titles)):
             print("\n" + titles[i], "\n")
             for j in display[i]:
                 index = display[i].index(j)
-                print(str(i) + "." + str(index), j)
+                print("[" + str(i) + "." + str(index) + "]", j)
 
         while True:
             choice = get_params("\nKtóry obiekt Ciebie interesuje?: ", 1)
             try:
                 return pick[int(choice[:choice.index(".")])][int(choice[choice.index(".") + 1:])]
-                break
             except IndexError:
                 print("Na wybranej pozycji nie znajduje się obiekt")
             except ValueError:
@@ -98,8 +100,8 @@ def display_hello():
     print("""Witam w Generatorze Komend w symulatorze Train Driver 2\t
             Jest to wersja wczesna, błędy można zgłaszać na forum,github,dc:czak#4333\t\t
                 Dziękuje za testowanie aplikacji\n""")
-    File_test("sklady_helper.txt").file_exist()
-    File_test("posterunki_helper.txt").file_exist()
+    File("sklady_helper.txt").file_exist()
+    File("posterunki_helper.txt").file_exist()
 
 
 def menu():
@@ -131,18 +133,20 @@ def get_params(question, req):
     return variable
 
 
-def sq_generator(parms):
+def sq_generator():
+    parms = []
     """Generuje komendy do spwanowania składu, zwraca: """
     try:
-        file1 = File_test("sklady_helper.txt")
-        file2 = File_test("posterunki_helper.txt")
+        file1 = File("sklady_helper.txt")
+        file2 = File("posterunki_helper.txt")
     except:
         return 0
 
     while True:
-        parms[0] = get_params(
-            "Podaj posterunek na którym się znajdujesz. Niektóre scenerie tego nie wymagają! (Cis). By otworzyc listę posterunków wpisz 'lista': ",
-            0)
+        parms.append(get_params(
+            "Podaj posterunek na którym się znajdujesz. Niektóre scenerie tego nie wymagają! (Cis). By otworzyc listę "
+            "posterunków wpisz 'lista': ",
+            0))
         if parms[0] == "lista":
             if not file2.file_exist():
                 print("Operacja nieudana")
@@ -155,12 +159,13 @@ def sq_generator(parms):
         parms[0] += "_"
     else:
         parms[0] = ""
-    parms[1] = get_params("Podaj semafor pod którym ma pojawić się skład!: ", 1)
-    parms[2] = get_params("Podaj odległośc od semafora: ", 1)
-    parms[3] = get_params("Podaj ilość wagonów: ", 1)
+    parms.append(get_params("Podaj semafor pod którym ma pojawić się skład!: ", 1))
+    parms.append(get_params("Podaj odległośc od semafora: ", 1))
+    parms.append(get_params("Podaj ilość wagonów: ", 1))
     while True:
-        parms[4] = get_params("Jaki typ pojazdu chcesz stworzyć? Jeżeli chcesz otworzyć listę pojazdów wpisz 'lista': ",
-                              1)
+        parms.append(get_params("Jaki typ pojazdu chcesz stworzyć? Jeżeli chcesz otworzyć listę pojazdów wpisz "
+                                "'lista': ",
+                                1))
         if parms[4] == "lista":
             if not file1.file_exist():
                 print("Operacja nieudana")
@@ -173,9 +178,9 @@ def sq_generator(parms):
     while True:
         choice = get_params("Czy chcesz coś dodać do obecnego składu? t/n: ", 1)
         if choice.lower() == "t":
-            file3 = File_test("sklady_helper.txt")
+            file3 = File("sklady_helper.txt")
             for i in range(2):
-                parms[5] = ""
+                parms.append("")
                 if i == 0:
                     parms[5] = get_params("Podaj ilość wagonów: ", 1)
                     parms[4] += ";n:" + parms[5] + ","
@@ -198,7 +203,8 @@ def sq_generator(parms):
     return parms
 
 
-def kick_generator(parms):
+def kick_generator():
+    parms = ["", ""]
     """Generuje komende która wyrzuca gracza"""
     parms[0] = get_params("Podaj nick lub indetyfikator gracza: ", 1)
     parms[1] = get_params("Podaj powód (niewymagane): ", 0)
@@ -238,26 +244,26 @@ def history():
         print("Brakuje pliku historia_helper.txt")
     else:
         print("\nHistoria 5 ostatnich komend:")
-        pos = 1
+        pos = 5
         history = f.readlines()
         for i in range(len(history) - 5, len(history)):
             if len(history[i]) < 2:
                 continue
             else:
                 print(str(pos) + ".", history[i].replace("'", ""), end="")
-                pos += 1
+                pos -= 1
 
 
 def main():
     """Główna funkcja programu"""
+    parms = []
     display_hello()
     while True:
-        parms = [1, 2, 3, 4, 5, ""]
         choice = menu()
         if choice == "1":
-            parms = sq_generator(parms)
+            parms = sq_generator()
         elif choice == "2":
-            parms = kick_generator(parms)
+            parms = kick_generator()
         elif choice == "3":
             history()
         elif choice == "4":
@@ -267,4 +273,5 @@ def main():
         print("\n")
 
 
-main()
+if __name__ == "__main__":
+    main()

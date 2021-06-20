@@ -153,7 +153,6 @@ class Order_N(Order):
                         print("Prosze podać poprawną opcję")
 
                 self.draw_text((720, 905), self.get_args("Wyjazd w kierunku?: ", True))
-                coords = ((0, 0), (0, 0))
                 while True:
                     print("""
                     Wyjazd na szlak:
@@ -183,7 +182,7 @@ class Order_N(Order):
                 self.draw_line(((280, 1022), (1356, 1022)))
 
                 # code
-                coords = ((), ())
+
                 self.draw_text((617, 1043), self.get_args("Wyjazd z toru nr: ", True))
                 self.draw_text((889, 1113), self.get_args("Wyjazd w kierunku?: ", True))
                 while True:
@@ -210,8 +209,6 @@ class Order_N(Order):
                 print("Prosze podać poprawną opcję")
 
     def plot_3(self):
-        coords1 = ((0, 0), (0, 0))
-        coords2 = ((0, 0), (0, 0))
         while True:
             print("""
             Przemieszczenie pociągu:
@@ -247,7 +244,6 @@ class Order_N(Order):
 
         self.draw_text((929, 1580), self.get_args("Wjazd z toru szlakowego nr: ", True))
 
-        coords = ((0, 0), (0, 0))
         while True:
             print("""
             Wjazd na:
@@ -268,8 +264,6 @@ class Order_N(Order):
 
         self.draw_text((821, 1678), self.get_args("Nazwa Stacji/Posterunku: ", True))
 
-        coords1 = ((0, 0), (0, 0))
-        coords2 = ((0, 0), (0, 0))
         while True:
             print("""
             Wjazd odbędzie się po:
@@ -281,7 +275,6 @@ class Order_N(Order):
                 coords1 = ((275, 2005), (1338, 2005))
                 coords2 = ((275, 2065), (655, 2065))
 
-                coords = ((0, 0), (0, 0))
                 while True:
                     print("""
                     Urządzenie ustawione:
@@ -318,7 +311,6 @@ class Order_N(Order):
 
         self.draw_text((442, 2244), self.get_args("Z kierunku: ", True))
 
-        coords = ((0, 0), (0, 0))
         while True:
             print("""
             Na:
@@ -342,7 +334,6 @@ class Order_N(Order):
         self.draw_text((882, 2336), self.get_args("I przejechać obok sygnału \"Stój\" na: ", True))
 
     def plot_6(self):
-        get = ""
         while True:
             get = self.get_args("Co chcesz umieścić w Inne?: ", False)
             if len(get) > 192:
@@ -540,10 +531,9 @@ class Order_S(Order):
         self.draw_text((279, 1910), self.get_args("O godzinie: ", True))
 
     def plot_4(self):
-        get = ""
         while True:
             get = self.get_args("Co chcesz umieścić w Inne?: ", False)
-            if len(get) > 192:
+            if len(get) > 225:
                 print("Podana wiadomość jest za długa")
             else:
                 break
@@ -560,7 +550,6 @@ class Order_S(Order):
     def finish_order(self):
         self.get_information()
         while True:
-            coords = ((), ())
             print("""
             Rozkaz dla:
             1. Pociągu
@@ -635,4 +624,5 @@ def main():
         pass
 
 
-main()
+if __name__ == "__main__":
+    main()
