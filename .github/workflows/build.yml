@@ -1,0 +1,55 @@
+on: 
+  push:
+    branches:
+      - main
+    tags:
+      -'v*'
+name: Build App with PyInstaller
+
+jobs:
+  build:
+    
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+    - name: Install dependencies And Create requirements.txt
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller pypreqs
+	pyreqs
+	pip install -r requirements.txt 
+    - name: build with pyinstaller
+      run: |
+        pyinstaller \Helper\Helper.py --onefile --name TDHelper
+        move .\Helper\dist\TDHelper.exe .\
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Archive Release
+      uses: thedoctor0/zip-release@master
+      with:
+        type: 'zip'
+        filename: 'TDHelper.zip'
+        path: './Helper/TDHelper.exe ./assets/'
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Helper/TDHelper.zip
+        asset_name: TDHelper.zip
+        asset_content_type: application/zip

@@ -9,8 +9,8 @@ class Order:
         self.order_number: int = 0
         self.train_number: int = 0
         self.date = now.strftime("%d,%y")
-        self.image = Image.open("Order_template/" + order + ".JPG")
-        self.fnt = ImageFont.truetype("Fonts/arial.ttf.", 48)
+        self.image = Image.open("assets/Order_template/" + order + ".JPG")
+        self.fnt = ImageFont.truetype("assets/Fonts/arial.ttf.", 48)
         self.draw = ImageDraw.Draw(self.image)
 
     @staticmethod
@@ -385,7 +385,7 @@ class Order_N(Order):
             elif plot == "7":
                 self.image.show()
                 self.image.save(
-                    f"Orders/T{self.order_type}TN{self.train_number}ON{self.order_number}D{self.date[:2]}.jpg")
+                    f"assets/Orders/T{self.order_type}TN{self.train_number}ON{self.order_number}D{self.date[:2]}.jpg")
                 break
             else:
                 print("Brak wartości")
@@ -594,7 +594,7 @@ class Order_S(Order):
             elif plot == "5":
                 self.image.show()
                 self.image.save(
-                    f"Orders/T{self.order_type}TN{self.train_number}ON{self.order_number}D{self.date[:2]}.jpg")
+                    f"assets/Orders/T{self.order_type}TN{self.train_number}ON{self.order_number}D{self.date[:2]}.jpg")
                 break
             else:
                 print("Brak wartości")
@@ -602,12 +602,12 @@ class Order_S(Order):
 
 def choose_order():
     answer = ""
-    while answer not in ("1", "2", "3"):
+    while answer not in ("1", "2"):
         print("""
         Który rozkaz wybierasz?
         1. N
         2. S
-        3. O
+        3. O // Wersja 1.0
         """)
         answer = input("Co wybierasz?: ")
 

@@ -1,0 +1,7 @@
+<Posterunki
+Ps > Piaskowo
+Tw > Testowo
+Im > Imielin
+ > Cis
+end
+[END - do not delete]

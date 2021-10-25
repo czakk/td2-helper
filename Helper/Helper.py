@@ -1,20 +1,15 @@
-#   github.com/czakk/td2-helper; author: czak; date:05/11/2020
-#   Title: TD2 Helper;
-#   Description: Generator komend do symulatora TD2(td2.info.pl);version: 0.9;Last-Update: 09/06/2021 by czak;
-import sys
+from sys import exit
+from Order import main as order_main
 
-
-# import Order
 
 class File(object):
-    """Testuje pliki czy posiadają poprawne parametry"""
+    """Odpowiada za kontrole plikami"""
 
     def __init__(self, file):
         self.file_name = file
         self.__error = None
         try:
             self.file = open(file, "r")
-
         except IOError as e:
             self.__error = e
 
@@ -100,20 +95,21 @@ def display_hello():
     print("""Witam w Generatorze Komend w symulatorze Train Driver 2\t
             Jest to wersja wczesna, błędy można zgłaszać na forum,github,dc:czak#4333\t\t
                 Dziękuje za testowanie aplikacji\n""")
-    File("sklady_helper.txt").file_exist()
-    File("posterunki_helper.txt").file_exist()
+    File("assets/sklady_helper.txt").file_exist()
+    File("assets/posterunki_helper.txt").file_exist()
 
 
-def menu():
+def menu() -> int:
     """Menu wyboru między opcjami programu, zwraca nr. opcji"""
-    legal_choices = ("1", "2", "3", "4")
+    legal_choices = ("1", "2", "4", "5")
     user_choice = None
     while user_choice not in legal_choices:
         print("""Wybierz opcję która cię interesuję:
                1.Generator składów
                2.Wyrzucenia Gracza
-               3.Historia Komend
-               4.Zamknięcie programu
+               3.Historia Komend // Wersja 1.0
+               4.Tworzenie rozkazu pisemnego
+               5. Zakończenie programu
               """)
         user_choice = input("Która opcje wybierasz?: ")
         if user_choice not in legal_choices:
@@ -133,12 +129,12 @@ def get_params(question, req):
     return variable
 
 
-def sq_generator():
+def sq_generator() -> list:
     parms = []
-    """Generuje komendy do spwanowania składu, zwraca: """
+    """Generuje komendy do spwanowania składu"""
     try:
-        file1 = File("sklady_helper.txt")
-        file2 = File("posterunki_helper.txt")
+        file1 = File("assets/sklady_helper.txt")
+        file2 = File("assets/posterunki_helper.txt")
     except:
         return 0
 
@@ -150,6 +146,7 @@ def sq_generator():
         if parms[0] == "lista":
             if not file2.file_exist():
                 print("Operacja nieudana")
+                parms.remove(parms[0])
             else:
                 parms[0] = file2.pick_object()
                 break
@@ -169,6 +166,7 @@ def sq_generator():
         if parms[4] == "lista":
             if not file1.file_exist():
                 print("Operacja nieudana")
+                parms.remove(parms[4])
             else:
                 parms[4] = file1.pick_object()
                 break
@@ -178,7 +176,7 @@ def sq_generator():
     while True:
         choice = get_params("Czy chcesz coś dodać do obecnego składu? t/n: ", 1)
         if choice.lower() == "t":
-            file3 = File("sklady_helper.txt")
+            file3 = File("assets/sklady_helper.txt")
             for i in range(2):
                 parms.append("")
                 if i == 0:
@@ -192,6 +190,7 @@ def sq_generator():
                         if parms[5] == "lista":
                             if not file3.file_exist():
                                 print("Operacja nieudana")
+                                parms.remove(parms[5])
                             else:
                                 parms[5] = file3.pick_object()
                                 break
@@ -212,9 +211,7 @@ def kick_generator():
 
 
 def write_to_file(file, message):
-    f = open(file, "a")
-    f.write("\n" + message)
-    f.close()
+    with open(file, 'a') as f: f.write(f'\n{message}')
 
 
 def cmd_generator(parms, choice):
@@ -224,12 +221,12 @@ def cmd_generator(parms, choice):
     if choice == "1":
         command = "/sp " + parms[0].title() + parms[1].title() + ":" + parms[2] + " n:" + parms[3] + "," + parms[4]
         print("\t" + command)
-        write_to_file("historia_helper.txt", repr(command))
+        write_to_file("assets/historia_helper.txt", repr(command))
         return command
     elif choice == "2":
         command = "/kick_driver " + parms[0] + " " + parms[1]
         print("\t" + command)
-        write_to_file("historia_helper.txt", repr(command))
+        write_to_file("assets/historia_helper.txt", repr(command))
         return command
     elif choice == "3":
         return 0
@@ -238,11 +235,7 @@ def cmd_generator(parms, choice):
 
 
 def history():
-    try:
-        f = open("historia_helper.txt", "r")
-    except IOError:
-        print("Brakuje pliku historia_helper.txt")
-    else:
+    with open("assets/historia_helper.txt", "r") as f:
         print("\nHistoria 5 ostatnich komend:")
         pos = 5
         history = f.readlines()
@@ -267,8 +260,10 @@ def main():
         elif choice == "3":
             history()
         elif choice == "4":
+            order_main()
+        elif choice == "5":
             print("Do następnego")
-            sys.exit()
+            exit()
         cmd_generator(parms, choice)
         print("\n")
 
