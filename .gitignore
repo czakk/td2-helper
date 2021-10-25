@@ -11,7 +11,7 @@
 /dist/
 /build/
 /Helper/__pycache__/
-/Helper//.pytest_cache/
+/Helper/.pytest_cache/
 /Helper/.vs/
 /Helper/.idea/
 /Helper/build/

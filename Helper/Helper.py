@@ -101,13 +101,13 @@ def display_hello():
 
 def menu() -> int:
     """Menu wyboru między opcjami programu, zwraca nr. opcji"""
-    legal_choices = ("1", "2", "3", "4", "5")
+    legal_choices = ("1", "2", "4", "5")
     user_choice = None
     while user_choice not in legal_choices:
         print("""Wybierz opcję która cię interesuję:
                1.Generator składów
                2.Wyrzucenia Gracza
-               3.Historia Komend
+               3.Historia Komend // Wersja 1.0
                4.Tworzenie rozkazu pisemnego
                5. Zakończenie programu
               """)

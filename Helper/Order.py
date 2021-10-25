@@ -602,12 +602,12 @@ class Order_S(Order):
 
 def choose_order():
     answer = ""
-    while answer not in ("1", "2", "3"):
+    while answer not in ("1", "2"):
         print("""
         Który rozkaz wybierasz?
         1. N
         2. S
-        3. O
+        3. O // Wersja 1.0
         """)
         answer = input("Co wybierasz?: ")
 
