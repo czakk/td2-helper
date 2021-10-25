@@ -26,7 +26,8 @@ jobs:
     - name: build with pyinstaller
       run: |
         pyinstaller \Helper\Helper.py --onefile --name TDHelper
-        move .\Helper\dist\TDHelper.exe .\
+        dir
+        move \Helper\dist\TDHelper.exe .\
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
