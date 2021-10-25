@@ -25,9 +25,9 @@ jobs:
         pip install -r requirements.txt
     - name: build with pyinstaller
       run: |
-        pyinstaller \Helper\Helper.py --onefile --name TDHelper
+        pyinstaller .\Helper\Helper.py --onefile --name TDHelper
         dir
-        move dist\TDHelper.exe .\
+        move \dist\TDHelper.exe .\
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
