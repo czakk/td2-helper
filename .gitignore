@@ -3,15 +3,15 @@
 *.sln
 *.jpg
 .vscode/
-dirtycode.py
 *.txt
 *.exe
+*.spec
 /dist/
 /build/
-*.spec
 /Helper/__pycache__/
 /Helper//.pytest_cache/
 /Helper/.vs/
 /Helper/.idea/
 /Helper/Orders/
 /Helper/Fonts/
+/Helper/build/
