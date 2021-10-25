@@ -3,11 +3,10 @@
 *.sln
 .vscode/
 *.txt
-!sklady_helper.txt
-!posterunki_helper.txt
-!historia_helper.txt
 *.exe
 *.spec
+*.jpg
+*.png
 /dist/
 /build/
 /Helper/__pycache__/
@@ -15,3 +14,5 @@
 /Helper/.vs/
 /Helper/.idea/
 /Helper/build/
+/Helper/Orders/
+/Helper/Fonts/

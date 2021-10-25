@@ -221,12 +221,12 @@ def cmd_generator(parms, choice):
     if choice == "1":
         command = "/sp " + parms[0].title() + parms[1].title() + ":" + parms[2] + " n:" + parms[3] + "," + parms[4]
         print("\t" + command)
-        write_to_file("assets/historia_helper.txt", repr(command))
+        write_to_file("./assets/historia_helper.txt", repr(command))
         return command
     elif choice == "2":
         command = "/kick_driver " + parms[0] + " " + parms[1]
         print("\t" + command)
-        write_to_file("assets/historia_helper.txt", repr(command))
+        write_to_file("./assets/historia_helper.txt", repr(command))
         return command
     elif choice == "3":
         return 0
@@ -235,7 +235,7 @@ def cmd_generator(parms, choice):
 
 
 def history():
-    with open("assets/historia_helper.txt", "r") as f:
+    with open("/assets/historia_helper.txt", "r") as f:
         print("\nHistoria 5 ostatnich komend:")
         pos = 5
         history = f.readlines()
