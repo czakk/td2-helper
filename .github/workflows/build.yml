@@ -23,7 +23,7 @@ jobs:
       run: |
         pipreqs
         pip install -r requirements.txt
-    - name: build with pyinstaller pyreqs==0.1.1
+    - name: build with pyinstaller
       run: |
         pyinstaller \Helper\Helper.py --onefile --name TDHelper
         move .\Helper\dist\TDHelper.exe .\
