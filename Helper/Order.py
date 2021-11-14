@@ -8,7 +8,7 @@ class Order:
         self.order_type = order
         self.order_number: int = 0
         self.train_number: int = 0
-        self.date = now.strftime("%d,%y")
+        self.date = now.strftime("%d.%m.%Y")
         self.image = Image.open("assets/Order_template/" + order + ".JPG")
         self.fnt = ImageFont.truetype("assets/Fonts/arial.ttf.", 48)
         self.draw = ImageDraw.Draw(self.image)
@@ -26,43 +26,48 @@ class Order:
             answer = input(question)
         return answer
 
-    def get_information(self):
-        # Coords for N type Order
-        if self.order_type == "N":
-            # Order number
-            coords1 = (1080, 95)
-            # Train number
-            coords2 = (467, 215)
-            # Day
-            coords3 = (960, 215)
-            # Year
-            coords4 = (1248, 215)
-        elif self.order_type == "S":
-            # Order number
-            coords1 = (1124, 80)
-            # Train number
-            coords2 = (575, 225)
-            # Day
-            coords3 = (1340, 230)
-
-        # get and print Order Number
-        self.order_number = self.get_args("Podaj numer rozkazu: ", True)
-        self.draw_text(coords1, self.order_number)
-
-        # get and print Train Number
-        self.train_number = self.get_args("Podaj numer pociągu: ", True)
-        self.draw_text(coords2, self.train_number)
-
-        # print date
-        self.draw_text(coords3, self.date[:2])
-        if self.order_type != "S":
-            self.draw_text(coords4, self.date[3:])
-
     def draw_text(self, coords: tuple, text: str):
         self.draw.text(coords, text, font=self.fnt, fill=(0, 0, 0))
 
     def draw_line(self, coords: tuple, width=5):
         self.draw.line(coords, fill=(0, 0, 0), width=width, joint="curve")
+
+    def get_information(self):
+        # Coords for N type Order
+        if self.order_type == "N":
+            # 1.Order number 2.Train Number 3.Day 4.Year 5.Station 6.Post 7.Hour 8.Minute 9.Dispatcher
+            coords = [(1080, 95), (467, 215), (841, 215),
+                      (1248, 215), (125, 2834), (632, 2834),
+                      (1050, 2834), (1275, 2834), (125, 2945)]
+
+        elif self.order_type == "S":
+            # 1.Order number 2.Train Number 3.Date 4.None/Fill 5.Station 6.Post 7.Hour 8.Minute 9.Dispatcher
+            coords = [(1124, 80), (575, 225), (1200, 230),
+                      None, (125, 2485), (652, 2485),
+                      (1203, 2485), (1437, 2485), (125, 2682)]
+
+        # get and print Order Number
+        self.order_number = self.get_args("Podaj numer rozkazu: ", True)
+        self.draw_text(coords[0], self.order_number)
+
+        # get and print Train Number
+        self.train_number = self.get_args("Podaj numer pociągu: ", True)
+        self.draw_text(coords[1], self.train_number)
+
+        # print date
+
+        if self.order_type == "N":
+            self.draw_text(coords[2], self.date[:5])
+            self.draw_text(coords[3], self.date[8:])
+        elif self.order_type == "S":
+            self.draw_text(coords[2], self.date)
+
+        # print station information
+        self.draw_text(coords[4], self.get_args("Podaj nazwę stacji: ", True).title())  # Station name
+        self.draw_text(coords[5], self.get_args("Podaj posterunek: ", True).title())  # Post
+        self.draw_text(coords[6], self.get_args("Podaj godzinę: ", True))  # Hour
+        self.draw_text(coords[7], self.get_args("Podaj minuty: ", True))  # Minute
+        self.draw_text(coords[8], self.get_args("Dyżurny: ", True))  # Dispatcher
 
 
 class Order_N(Order):
